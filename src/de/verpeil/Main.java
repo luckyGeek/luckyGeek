@@ -72,9 +72,9 @@ public class Main {
 	}
 
 	private void downloadPicture() throws IOException {
-		System.out.println("Download started!");
+		System.out.println("Download started for file "+lastPicture+"!");
 		Process dl = Runtime.getRuntime().exec(
-				"./tools/wget/wget -O last.jpg " + lastPicture);
+				"./tools/wget/wget -O last.jpg -U Mozilla/5.0 " + lastPicture);
 		waitTillFinisched(dl);
 		System.out.println("Download finished!");
 	}
