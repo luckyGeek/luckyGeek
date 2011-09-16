@@ -46,7 +46,7 @@ public class DataProvider {
 		try {
 			String content = atom.getChild("entry", ns).getChild("content", ns)
 					.getValue();
-			String croppedContent = content.split("href=")[1].replace("\"","");
+			String croppedContent = content.split("href=")[1].split("\"")[1];
 			url = new URL(croppedContent);
 
 		} catch (Exception e) {
