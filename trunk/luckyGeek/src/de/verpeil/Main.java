@@ -51,8 +51,12 @@ public class Main {
 			e.printStackTrace();
 		}
 		try {
-			Runtime.getRuntime().exec("del all.pdf");
-			Runtime.getRuntime().exec("move tmp.pdf all.pdf");
+			Runtime.getRuntime().exec("rm all.pdf");
+			Runtime.getRuntime().exec("mv tmp.pdf all.pdf");
+
+			Runtime.getRuntime().exec("rm last.pdf");
+			Runtime.getRuntime().exec("rm last.jpg");
+			System.out.println("Appended to PDF!");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -60,13 +64,38 @@ public class Main {
 	}
 
 	private void convertPicture() throws IOException {
-		Runtime.getRuntime().exec("./tools/imagick/convert last.jpg last.pdf");
-
+		System.out.println("Starting convert!");
+		Process convert = Runtime.getRuntime().exec(
+				"./tools/imagick/convert last.jpg last.pdf");
+		waitTillFinisched(convert);
+		System.out.println("Converted to PDF!");
 	}
 
 	private void downloadPicture() throws IOException {
-		Runtime.getRuntime().exec(
-				"./tools/wget/wget -o last.jpg " + lastPicture);
+		System.out.println("Download started!");
+		Process dl = Runtime.getRuntime().exec(
+				"./tools/wget/wget -O last.jpg " + lastPicture);
+		waitTillFinisched(dl);
+		System.out.println("Download finished!");
+	}
+
+	private void waitTillFinisched(Process process) {
+		int NOT_FINISHED = -1000;
+		int exit = NOT_FINISHED;
+		while (exit == NOT_FINISHED) {
+			try {
+				int tmp = process.exitValue();
+				System.out.print("Exit Code: "+tmp);
+				exit = tmp;
+			} catch (IllegalThreadStateException e) {
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		}
 	}
 
 	/**
