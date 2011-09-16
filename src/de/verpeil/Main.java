@@ -29,7 +29,7 @@ public class Main {
 		try {
 			downloadPicture();
 			convertPicture();
-			//appendToPDF();
+			appendToPDF();
 
 		} catch (IOException e) {
 			e.printStackTrace();
