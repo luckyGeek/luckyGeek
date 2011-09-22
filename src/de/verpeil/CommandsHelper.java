@@ -1,6 +1,6 @@
 package de.verpeil;
 
-public class Commands {
+public class CommandsHelper {
 
 	private static final String SPACE = " ";
 	private static final String WINDOWS_TOOLS_FOLDER = "./tools/";

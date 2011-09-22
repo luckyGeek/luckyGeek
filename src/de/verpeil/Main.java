@@ -70,14 +70,14 @@ public class Main {
 
 	private void convertPicture() throws IOException {
 		System.out.println("Starting convert!");
-		Process convert = Runtime.getRuntime().exec(Commands.convertCommand());
+		Process convert = Runtime.getRuntime().exec(CommandsHelper.convertCommand());
 		waitTillFinisched(convert);
 		System.out.println("Converted to PDF!");
 	}
 
 	private void downloadPicture() throws IOException {
 		System.out.println("Download started for file " + lastPicture + "!");
-		Process dl = Runtime.getRuntime().exec(Commands.DLCommand(lastPicture.toString()));
+		Process dl = Runtime.getRuntime().exec(CommandsHelper.DLCommand(lastPicture.toString()));
 		waitTillFinisched(dl);
 		System.out.println("Download finished!");
 	}
