@@ -65,16 +65,14 @@ public class Main {
 
 	private void convertPicture() throws IOException {
 		System.out.println("Starting convert!");
-		Process convert = Runtime.getRuntime().exec(
-				"./tools/imagick/convert last.jpg last.pdf");
+		Process convert = Runtime.getRuntime().exec(Commands.convertCommand());
 		waitTillFinisched(convert);
 		System.out.println("Converted to PDF!");
 	}
 
 	private void downloadPicture() throws IOException {
-		System.out.println("Download started for file "+lastPicture+"!");
-		Process dl = Runtime.getRuntime().exec(
-				"./tools/wget/wget -q -O last.jpg -U Mozilla/5.0 " + lastPicture);
+		System.out.println("Download started for file " + lastPicture + "!");
+		Process dl = Runtime.getRuntime().exec(Commands.DLCommand(lastPicture.toString()));
 		waitTillFinisched(dl);
 		System.out.println("Download finished!");
 	}
@@ -85,7 +83,7 @@ public class Main {
 		while (exit == NOT_FINISHED) {
 			try {
 				int tmp = process.exitValue();
-				System.out.print("Exit Code: "+tmp);
+				System.out.print("Exit Code: " + tmp);
 				exit = tmp;
 			} catch (IllegalThreadStateException e) {
 				try {
