@@ -1,5 +1,6 @@
 package de.verpeil;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
@@ -8,6 +9,10 @@ import org.apache.pdfbox.util.PDFMergerUtility;
 
 public class Main {
 
+	private static final String LAST_PDF = "last.pdf";
+	private static final String LAST_JPEG = "last.jpg";
+	private static final String TMP_FILE = "tmp.pdf";
+	private static final String ALL_PDF = "all.pdf";
 	private DataProvider dp;
 	private URL lastPicture;
 
@@ -38,9 +43,9 @@ public class Main {
 
 	private void appendToPDF() {
 		PDFMergerUtility mergePdf = new PDFMergerUtility();
-		mergePdf.addSource("all.pdf");
-		mergePdf.addSource("last.pdf");
-		mergePdf.setDestinationFileName("tmp.pdf");
+		mergePdf.addSource(ALL_PDF);
+		mergePdf.addSource(LAST_JPEG);
+		mergePdf.setDestinationFileName(TMP_FILE);
 		try {
 			mergePdf.mergeDocuments();
 		} catch (IOException e) {
@@ -51,11 +56,11 @@ public class Main {
 			e.printStackTrace();
 		}
 		try {
-			Runtime.getRuntime().exec("rm all.pdf");
-			Runtime.getRuntime().exec("mv tmp.pdf all.pdf");
+			new File("all.pdf").delete();
+			Runtime.getRuntime().exec("mv "+TMP_FILE+" "+ALL_PDF);
 
-			Runtime.getRuntime().exec("rm last.pdf");
-			Runtime.getRuntime().exec("rm last.jpg");
+			new File(LAST_PDF).delete();
+			new File(LAST_JPEG).delete();
 			System.out.println("Appended to PDF!");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
