@@ -11,6 +11,8 @@ import org.jdom.Namespace;
 import org.jdom.input.SAXBuilder;
 
 public class DataProvider {
+	private static final String FIRST_ENTRY = "entry";
+	private static final String CONTENT = "content";
 	private URL url;
 	private Document doc;
 
@@ -44,7 +46,7 @@ public class DataProvider {
 		Element atom = doc.getRootElement();
 		Namespace ns = atom.getNamespace();
 		try {
-			String content = atom.getChild("entry", ns).getChild("content", ns)
+			String content = atom.getChild(FIRST_ENTRY, ns).getChild(CONTENT, ns)
 					.getValue();
 			String croppedContent = content.split("href=")[1].split("\"")[1];
 			url = new URL(croppedContent);
