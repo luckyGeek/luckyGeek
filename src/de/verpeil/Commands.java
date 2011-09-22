@@ -3,16 +3,26 @@ package de.verpeil;
 public class Commands {
 
 	private static final String SPACE = " ";
+	private static final String WINDOWS_TOOLS_FOLDER = "./tools/";
+	private static final String DL_COMMAND = "wget";
+	private static final String QUIET_MODE = "-q";
+	private static final String LAST_DL_JPEG = "last.jpg";
+	private static final String LAST_DL_PDF = "last.pdf";
+	private static final String SPEZIFY_OUTPUT_FILENAME = "-O ";
+	private static final String SPEZIFY_USER_AGENT = "-U ";
+	private static final String USER_AGENT = "Mozilla/5.0";
+	private static final String CONVERT_COMMAND = "convert";
+	private static final CharSequence WINDOWS = "Windows"; //TODO Check; better "Win"?
 
 	public static String DLCommand(String url) {
-		return compileIndependentCommand("wget", appendParameter("-q")
-				+ appendParameter("-O last.jpg")
-				+ appendParameter("-U Mozilla/5.0") + appendParameter(url));
+		return compileIndependentCommand(DL_COMMAND, appendParameter(QUIET_MODE)
+				+ appendParameter(SPEZIFY_OUTPUT_FILENAME+ LAST_DL_JPEG)
+				+ appendParameter(SPEZIFY_USER_AGENT+USER_AGENT) + appendParameter(url));
 	}
 
 	public static String convertCommand() {
-		return compileIndependentCommand("convert", appendParameter("last.jpg")
-				+ appendParameter("last.pdf"));
+		return compileIndependentCommand(CONVERT_COMMAND, appendParameter(LAST_DL_JPEG)
+				+ appendParameter(LAST_DL_PDF));
 	}
 
 	private static String appendSpace(String string) {
@@ -36,12 +46,12 @@ public class Commands {
 	private static void addWindowsFolderPrefixIfNeeded(
 			StringBuffer compiledCommand, String command) {
 		if (isWindows()) {
-			compiledCommand.append("./tools/" + command + "/");
+			compiledCommand.append(WINDOWS_TOOLS_FOLDER + command + "/");
 		}
 
 	}
 
 	private static boolean isWindows() {
-		return System.getProperty("os.name").contains("Windows");
+		return System.getProperty("os.name").contains(WINDOWS);
 	}
 }
