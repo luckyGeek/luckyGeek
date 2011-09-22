@@ -87,9 +87,9 @@ public class Main {
 		int exit = NOT_FINISHED;
 		while (exit == NOT_FINISHED) {
 			try {
-				int tmp = process.exitValue();
-				System.out.print("Exit Code: " + tmp);
-				exit = tmp;
+				int exitValue = process.exitValue();
+				System.out.print("Exit Code: " + exitValue);
+				exit = exitValue;
 			} catch (IllegalThreadStateException e) {
 				try {
 					Thread.sleep(10);
