@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Date;
 import java.util.logging.Logger;
 
-import org.apache.pdfbox.examples.pdmodel.AddImageToPDF;
 import org.apache.pdfbox.util.PDFMergerUtility;
 
 public class Main {
@@ -34,7 +33,7 @@ public class Main {
 		String allPdf = Configuration.getAllFile();
 		String lastPdf = Configuration.getLastFile();
 		try {
-			new AddImageToPDF().createPDFFromImage(input, image.getAbsolutePath(), lastPdf);
+			Runtime.getRuntime().exec(CommandsHelper.convertCommand());
 		} catch (Exception e) {
 			LOG.severe("Can not transform image to pdf: " + e.getMessage());
 		}

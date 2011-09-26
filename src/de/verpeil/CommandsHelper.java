@@ -1,12 +1,13 @@
 package de.verpeil;
 
+
 public class CommandsHelper {
 
 	private static final String SPACE = " ";
 	private static final String WINDOWS_TOOLS_FOLDER = "./tools/";
 	private static final String DL_COMMAND = "wget";
 	private static final String QUIET_MODE = "-q";
-	private static final String LAST_DL_JPEG = "last.jpg";
+	private static final String LAST_DL_JPEG = "current.jpg";
 	private static final String LAST_DL_PDF = "last.pdf";
 	private static final String SPEZIFY_OUTPUT_FILENAME = "-O ";
 	private static final String SPEZIFY_USER_AGENT = "-U ";
