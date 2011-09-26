@@ -6,7 +6,6 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
 	ConfigurationTest.class,
-	ImageScalerTest.class,
 	FileDownloaderTest.class,
 	MainTest.class
 })
