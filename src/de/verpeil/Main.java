@@ -11,6 +11,12 @@ public class Main {
 	private final FileDownloader fd = new FileDownloader();
 	private final DataProvider dp = new DataProvider();
 
+
+	private void procss() {
+		storeToFile();
+		
+	}
+	
 	void storeToFile() {
 		LOG.info("Begin: " + new Date());
 		File xmlFeed = fd.download(Configuration.getDownloadUrl(), Configuration.getTempXmlName());
@@ -49,6 +55,7 @@ public class Main {
     }
 	
 	public static void main(String[] args) {
-		new Main().storeToFile();
+		new Main().procss();
 	}
+
 }
