@@ -1,112 +1,57 @@
 package de.verpeil;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
+import java.util.Date;
+import java.util.logging.Logger;
 
-import org.apache.pdfbox.exceptions.COSVisitorException;
+import org.apache.pdfbox.examples.pdmodel.AddImageToPDF;
 import org.apache.pdfbox.util.PDFMergerUtility;
 
 public class Main {
+	private static final Logger LOG = Logger.getLogger(Main.class.getCanonicalName());
+	private final FileDownloader fd = new FileDownloader();
+	private final DataProvider dp = new DataProvider();
+	private final ImageScaler is = new ImageScaler();
 
-	private static final String LAST_PDF = "last.pdf";
-	private static final String LAST_JPEG = "last.jpg";
-	private static final String TMP_FILE = "tmp.pdf";
-	private static final String ALL_PDF = "all.pdf";
-	private DataProvider dp;
-	private URL lastPicture;
-
-	public Main() {
-		initialize();
-		extractData();
-		storeToFile();
+	void storeToFile() {
+		LOG.info("Begin: " + new Date());
+		File xmlFeed = fd.download(Configuration.getDownloadUrl(), Configuration.getTempXmlName());
+		String imageUrl = dp.extractImageUrl(xmlFeed);
+		
+		LOG.fine(imageUrl);
+		File image = fd.download(imageUrl, Configuration.getLastImage());
+		LOG.fine(image.getAbsolutePath());
+		
+		is.resizeAndOverride(image, Configuration.getScaleFactor());
+		appendToPDF(Configuration.getLastFile(), image);
+		
+		xmlFeed.deleteOnExit();
+		LOG.info("End: " + new Date());
 	}
 
-	private void initialize() {
-		dp = new DataProvider();
-	}
-
-	private void extractData() {
-		lastPicture = dp.getLastPicture();
-	}
-
-	private void storeToFile() {
+	private void appendToPDF(String input, File image) {
+		LOG.info("Begin append to pdf.");
+		String allPdf = Configuration.getAllFile();
+		String lastPdf = Configuration.getLastFile();
 		try {
-			downloadPicture();
-			convertPicture();
-			appendToPDF();
-
-		} catch (IOException e) {
-			e.printStackTrace();
+			new AddImageToPDF().createPDFFromImage(input, image.getAbsolutePath(), lastPdf);
+		} catch (Exception e) {
+			LOG.severe("Can not transform image to pdf: " + e.getMessage());
 		}
-	}
-
-	private void appendToPDF() {
+		
 		PDFMergerUtility mergePdf = new PDFMergerUtility();
-		mergePdf.addSource(ALL_PDF);
-		mergePdf.addSource(LAST_JPEG);
-		mergePdf.setDestinationFileName(TMP_FILE);
+		mergePdf.addSource(allPdf);
+		mergePdf.addSource(lastPdf);
+		mergePdf.setDestinationFileName(allPdf);
 		try {
 			mergePdf.mergeDocuments();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (COSVisitorException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			LOG.severe("Can not merge pdfs: " + e.getMessage());
 		}
-		try {
-			new File("all.pdf").delete();
-			Runtime.getRuntime().exec("mv "+TMP_FILE+" "+ALL_PDF);
-
-			new File(LAST_PDF).delete();
-			new File(LAST_JPEG).delete();
-			System.out.println("Appended to PDF!");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		LOG.info("End append to pdf.");
+    }
+	
+	public static void main(String[] args) {
+		new Main().storeToFile();
 	}
-
-	private void convertPicture() throws IOException {
-		System.out.println("Starting convert!");
-		Process convert = Runtime.getRuntime().exec(CommandsHelper.convertCommand());
-		waitTillFinisched(convert);
-		System.out.println("Converted to PDF!");
-	}
-
-	private void downloadPicture() throws IOException {
-		System.out.println("Download started for file " + lastPicture + "!");
-		Process dl = Runtime.getRuntime().exec(CommandsHelper.DLCommand(lastPicture.toString()));
-		waitTillFinisched(dl);
-		System.out.println("Download finished!");
-	}
-
-	private void waitTillFinisched(Process process) {
-		int NOT_FINISHED = -1000;
-		int exit = NOT_FINISHED;
-		while (exit == NOT_FINISHED) {
-			try {
-				int exitValue = process.exitValue();
-				System.out.print("Exit Code: " + exitValue);
-				exit = exitValue;
-			} catch (IllegalThreadStateException e) {
-				try {
-					Thread.sleep(10);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		}
-	}
-
-	/**
-	 * @param args
-	 * @throws IOException
-	 */
-	public static void main(String[] args) throws IOException {
-		new Main();
-	}
-
 }
