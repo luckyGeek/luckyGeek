@@ -10,7 +10,6 @@ public class Main {
 	private static final Logger LOG = Logger.getLogger(Main.class.getCanonicalName());
 	private final FileDownloader fd = new FileDownloader();
 	private final DataProvider dp = new DataProvider();
-	private final ImageScaler is = new ImageScaler();
 
 	void storeToFile() {
 		LOG.info("Begin: " + new Date());
@@ -21,7 +20,6 @@ public class Main {
 		File image = fd.download(imageUrl, Configuration.getLastImage());
 		LOG.fine(image.getAbsolutePath());
 		
-		is.resizeAndOverride(image, Configuration.getScaleFactor());
 		appendToPDF(Configuration.getLastFile(), image);
 		
 		xmlFeed.deleteOnExit();
