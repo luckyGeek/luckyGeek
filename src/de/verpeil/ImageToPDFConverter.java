@@ -22,6 +22,17 @@ public class ImageToPDFConverter {
 		WINDOWS = "Windows";
 	}
 
+	public void convert() {
+		try {
+			//TODO: get process result for exception handling.
+			Runtime.getRuntime().exec(convertCommand());
+		} catch (Exception e) {
+			LOG.severe("Can not transform image to pdf: " + e.getMessage());
+			//throw execption
+		}
+
+	}
+	
 	public String convertCommand() {
 		return compileIndependentCommand(CONVERT_COMMAND,
 				appendParameter(LAST_DL_JPEG) + appendParameter(LAST_DL_PDF));
