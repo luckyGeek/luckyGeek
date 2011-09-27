@@ -10,9 +10,9 @@ public class ImageToPDFConverter {
 	private static String LAST_DL_PDF;
 	private static String CONVERT_COMMAND;
 	private static CharSequence WINDOWS;
-	private static final Logger LOG = Logger.getLogger(ImageToPDFConverter.class
-			.getCanonicalName());
-	
+	private static final Logger LOG = Logger
+			.getLogger(ImageToPDFConverter.class.getCanonicalName());
+
 	public ImageToPDFConverter() {
 		setVars();
 	}
@@ -32,11 +32,10 @@ public class ImageToPDFConverter {
 			waitTillFinisched(convert);
 		} catch (Exception e) {
 			LOG.severe("Can not transform image to pdf: " + e.getMessage());
-			//throw execption
 		}
 
 	}
-	
+
 	public String convertCommand() {
 		return compileIndependentCommand(CONVERT_COMMAND,
 				appendParameter(LAST_DL_JPEG) + appendParameter(LAST_DL_PDF));
@@ -50,8 +49,7 @@ public class ImageToPDFConverter {
 		return appendSpace(string);
 	}
 
-	private String compileIndependentCommand(String command,
-			String parameters) {
+	private String compileIndependentCommand(String command, String parameters) {
 		StringBuffer compiledCommand = new StringBuffer("");
 		addWindowsFolderPrefixIfNeeded(compiledCommand, command);
 		command = appendSpace(command);
@@ -60,8 +58,8 @@ public class ImageToPDFConverter {
 		return compiledCommand.toString();
 	}
 
-	private void addWindowsFolderPrefixIfNeeded(
-			StringBuffer compiledCommand, String command) {
+	private void addWindowsFolderPrefixIfNeeded(StringBuffer compiledCommand,
+			String command) {
 		if (isWindows()) {
 			compiledCommand.append(WINDOWS_TOOLS_FOLDER + command + "/");
 		}
@@ -71,17 +69,18 @@ public class ImageToPDFConverter {
 	private boolean isWindows() {
 		return System.getProperty("os.name").contains(WINDOWS);
 	}
-	
-	private void waitTillFinisched(Process process) {
+
+	private void waitTillFinisched(Process process) throws Exception {
 		int NOT_FINISHED = -1000;
 		int exit = NOT_FINISHED;
 		while (exit == NOT_FINISHED) {
 			try {
 				int exitValue = process.exitValue();
-				LOG.info("Exit Code: " + exitValue+"\n");
+				LOG.info("Exit Code: " + exitValue + "\n");
 				exit = exitValue;
 				if (exitValue != -1000 && exitValue != 0) {
-					throw new Exception("Process terminated with error-code: "+exit);
+					throw new Exception("Process terminated with error-code: "
+							+ exit);
 				}
 			} catch (IllegalThreadStateException e) {
 				try {
@@ -91,4 +90,5 @@ public class ImageToPDFConverter {
 				}
 			}
 		}
+	}
 }
