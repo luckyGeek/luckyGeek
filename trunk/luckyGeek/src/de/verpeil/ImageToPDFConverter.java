@@ -10,13 +10,12 @@ public class ImageToPDFConverter {
 	private static String LAST_DL_PDF;
 	private static String CONVERT_COMMAND;
 	private static CharSequence WINDOWS;
-	private static Logger LOG;
+	private static final Logger LOG = Logger
+			.getLogger(ImageToPDFConverter.class.getCanonicalName());
 	private String IMAGICK_FOLDER;
 
 	public ImageToPDFConverter() {
 		setVars();
-		LOG = Logger.getLogger(ImageToPDFConverter.class
-				.getCanonicalName());
 	}
 
 	private void setVars() {
