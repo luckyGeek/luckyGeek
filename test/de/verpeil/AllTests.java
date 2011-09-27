@@ -7,7 +7,8 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses( {
 	ConfigurationTest.class,
 	FileDownloaderTest.class,
-	MainTest.class
+	MainTest.class,
+	ImageToPDFConverter.class
 })
 public class AllTests {
 
