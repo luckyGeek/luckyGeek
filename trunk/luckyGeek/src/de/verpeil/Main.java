@@ -37,7 +37,7 @@ public class Main {
 		String allPdf = Configuration.getAllFile();
 		String lastPdf = Configuration.getLastFile();
 		try {
-			Runtime.getRuntime().exec(CommandsHelper.convertCommand());
+			Runtime.getRuntime().exec((new ImageToPDFConverter()).convertCommand());
 		} catch (Exception e) {
 			LOG.severe("Can not transform image to pdf: " + e.getMessage());
 		}
