@@ -13,13 +13,16 @@ public class Main {
 	private final DataProvider dp = new DataProvider();
 
 	private void procss() {
+		LOG.info("Begin: " + new Date());
 		storeToFile();
 		appendToPDF();
 		cleanUp();
+		LOG.info("End: " + new Date());
 	}
 
 	void storeToFile() {
-		LOG.info("Begin: " + new Date());
+		LOG.info("Begin storeToFile.");
+		
 		File xmlFeed = fd.download(Configuration.getDownloadUrl(),
 				Configuration.getTempXmlName());
 		String imageUrl = dp.extractImageUrl(xmlFeed);
@@ -29,7 +32,8 @@ public class Main {
 		LOG.fine(image.getAbsolutePath());
 
 		xmlFeed.deleteOnExit();
-		LOG.info("End: " + new Date());
+		
+		LOG.info("End storeToFile.");
 	}
 
 	private void appendToPDF() {
