@@ -36,12 +36,7 @@ public class Main {
 		LOG.info("Begin append to pdf.");
 		String allPdf = Configuration.getAllFile();
 		String lastPdf = Configuration.getLastFile();
-		try {
-			Runtime.getRuntime().exec((new ImageToPDFConverter()).convertCommand());
-		} catch (Exception e) {
-			LOG.severe("Can not transform image to pdf: " + e.getMessage());
-		}
-
+		(new ImageToPDFConverter()).convert();
 		PDFMergerUtility mergePdf = new PDFMergerUtility();
 		mergePdf.addSource(allPdf);
 		mergePdf.addSource(lastPdf);
