@@ -19,7 +19,7 @@ public class ImageToPDFConverter {
 		LAST_DL_JPEG = "current.jpg";
 		LAST_DL_PDF = "last.pdf";
 		CONVERT_COMMAND = "convert";
-		WINDOWS = "Windows"; // T
+		WINDOWS = "Windows";
 	}
 
 	public String convertCommand() {
