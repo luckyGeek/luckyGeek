@@ -1,5 +1,7 @@
 package de.verpeil;
 
+import java.util.logging.Logger;
+
 public class ImageToPDFConverter {
 
 	private static String SPACE;
@@ -8,7 +10,9 @@ public class ImageToPDFConverter {
 	private static String LAST_DL_PDF;
 	private static String CONVERT_COMMAND;
 	private static CharSequence WINDOWS;
-
+	private static final Logger LOG = Logger.getLogger(ImageToPDFConverter.class
+			.getCanonicalName());
+	
 	public ImageToPDFConverter() {
 		setVars();
 	}
@@ -24,8 +28,8 @@ public class ImageToPDFConverter {
 
 	public void convert() {
 		try {
-			//TODO: get process result for exception handling.
-			Runtime.getRuntime().exec(convertCommand());
+			Process convert = Runtime.getRuntime().exec(convertCommand());
+			waitTillFinisched(convert);
 		} catch (Exception e) {
 			LOG.severe("Can not transform image to pdf: " + e.getMessage());
 			//throw execption
@@ -67,4 +71,24 @@ public class ImageToPDFConverter {
 	private boolean isWindows() {
 		return System.getProperty("os.name").contains(WINDOWS);
 	}
+	
+	private void waitTillFinisched(Process process) {
+		int NOT_FINISHED = -1000;
+		int exit = NOT_FINISHED;
+		while (exit == NOT_FINISHED) {
+			try {
+				int exitValue = process.exitValue();
+				LOG.info("Exit Code: " + exitValue+"\n");
+				exit = exitValue;
+				if (exitValue != -1000 && exitValue != 0) {
+					throw new Exception("Process terminated with error-code: "+exit);
+				}
+			} catch (IllegalThreadStateException e) {
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
 }
