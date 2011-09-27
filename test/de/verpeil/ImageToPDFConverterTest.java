@@ -15,7 +15,7 @@ public class ImageToPDFConverterTest {
 		
 		String winPrefix = "";
 		if (System.getProperty("os.name").contains("Windows")) {
-			winPrefix = "./tools/convert/";
+			winPrefix = "./tools/imagick/";
 		}
 		assertEquals(winPrefix+"convert current.jpg last.pdf ", commandResult);
 		
