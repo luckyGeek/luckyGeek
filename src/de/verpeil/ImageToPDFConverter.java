@@ -10,11 +10,13 @@ public class ImageToPDFConverter {
 	private static String LAST_DL_PDF;
 	private static String CONVERT_COMMAND;
 	private static CharSequence WINDOWS;
-	private static final Logger LOG = Logger
-			.getLogger(ImageToPDFConverter.class.getCanonicalName());
+	private static Logger LOG;
+	private String IMAGICK_FOLDER;
 
 	public ImageToPDFConverter() {
 		setVars();
+		LOG = Logger.getLogger(ImageToPDFConverter.class
+				.getCanonicalName());
 	}
 
 	private void setVars() {
@@ -24,6 +26,7 @@ public class ImageToPDFConverter {
 		LAST_DL_PDF = "last.pdf";
 		CONVERT_COMMAND = "convert";
 		WINDOWS = "Windows";
+		IMAGICK_FOLDER = "imagick";
 	}
 
 	public void convert() {
@@ -61,7 +64,7 @@ public class ImageToPDFConverter {
 	private void addWindowsFolderPrefixIfNeeded(StringBuffer compiledCommand,
 			String command) {
 		if (isWindows()) {
-			compiledCommand.append(WINDOWS_TOOLS_FOLDER + command + "/");
+			compiledCommand.append(WINDOWS_TOOLS_FOLDER + IMAGICK_FOLDER + "/");
 		}
 
 	}
