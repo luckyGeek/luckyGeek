@@ -5,10 +5,10 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses( {
+	ImageToPDFConverterTest.class,
 	ConfigurationTest.class,
 	FileDownloaderTest.class,
-	MainTest.class,
-	ImageToPDFConverter.class
+	MainTest.class
 })
 public class AllTests {
 
