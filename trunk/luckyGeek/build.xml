@@ -1,17 +1,32 @@
 <?xml version="1.0"?>
 <project name="luckyGeek" default="jar" basedir=".">
+	<property name="buildxml.home" value="." />
 	<property name="src.dir" value="src" />
 	<property name="test.dir" value="test" />
 	<property name="build.dir" value="build" />
 	<property name="classes.dir" value="${build.dir}/classes" />
 	<property name="jar.dir" value="${build.dir}/jar" />
-	<property name="main-class" value="de.verpeil.Main" />
-	<property name="test-all-class" value="de.verpeil.AllTests" />
 	<property name="lib.dir" value="lib" />
+	<property name="conf.dir" value="conf" />
+	<property name="dest.dir" value="${build.dir}/dest" />
 	<property name="report.dir" value="${build.dir}/junitreport" />
 
+	<property name="test-all-class" value="de.verpeil.AllTests" />
+
+	<property name="class-loader" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader" />
+	<property name="main-class" value="de.verpeil.Main" />
+	<property name="manifest.main.class" value="${main-class}" />
+	<property name="manifest.built.by" value="lucky geeks" />
+	<property name="manifest.created.by" value="lucky geeks" />
+
+	<property name="version.number" value="0.1" />
+	<property name="build.number" value="0.1" />
+
 	<path id="classpath">
-		<fileset dir="${lib.dir}" includes="**/*.jar" />
+		<fileset dir="${buildxml.home}">
+			<include name="${lib.dir}/*.jar"/>
+			<exclude name="${lib.dir}/junit-*.jar"/>
+		</fileset>
 	</path>
 
 	<path id="classpath.test">
@@ -27,65 +42,94 @@
 		<mkdir dir="${classes.dir}" />
 		<javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" optimize="on" failonerror="true" />
 		<copy todir="${classes.dir}">
-			<fileset dir="${src.dir}" excludes="**/*.java"/>
+			<fileset dir="${src.dir}">
+				<exclude name="**/*svn"/>
+			</fileset>
 		</copy>
 	</target>
 
 	<target name="jar" depends="compile">
 		<mkdir dir="${jar.dir}" />
-		<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}">
-			<manifest>
-				<attribute name="Main-Class" value="${main-class}" />
-			</manifest>
-			<zipfileset dir="${lib.dir}">
-				<include name="*"/>
-				<exclude name="junit-4.9.jar"/>
+		<mkdir dir="${dest.dir}" />
+
+		<pathconvert property="mf.classpath" pathsep=" " refid="classpath">
+			<flattenmapper/>
+		</pathconvert>
+
+		<tstamp />
+
+		<manifest file="MANIFEST.MF">
+			<attribute name="Built-By" value="${manifest.built.by}" />
+			<attribute name="Created-By" value="${manifest.created.by}" />
+			<attribute name="Implementation-Version" value="${version.number}-b${build.number}" />
+			<attribute name="Built-Date" value="${TODAY}" />
+			<attribute name="Main-Class" value="${main-class}"/>
+			<attribute name="Class-Path" value=". ${mf.classpath}" />
+		</manifest>
+
+		<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}" manifest="MANIFEST.MF">
+			<zipfileset dir="${buildxml.home}">
+				<include name="${conf.dir}/*"/>
 			</zipfileset>
 		</jar>
 	</target>
 
-	<target name="run" depends="jar" description="creates jar and execute it">
-		<java classname="${main-class}" fork="true" failonerror="true">
-			<classpath>
-				<path refid="classpath" />
-				<path location="${jar.dir}/${ant.project.name}.jar" />
-			</classpath>
-		</java>
+	<target name="export" description="build zip file" depends="jar">
+		<copy todir="${dest.dir}">
+			<fileset dir="${lib.dir}">
+				<exclude name="junit*" />
+				<include name="*.jar"/>
+			</fileset>
+			<fileset dir="${jar.dir}">
+				<include name="*.jar"/>
+			</fileset>
+			<fileset dir="${buildxml.home}">
+				<include name="run.*"/>
+				<include name="LICENSE*"/>
+				<include name="README*"/>
+				<include name="all.pdf" />
+				<include name="last.pdf" />
+				<include name="${conf.dir}/*" />
+			</fileset>
+		</copy>
+		<zip destfile="${dest.dir}/${ant.project.name}.zip" basedir="${dest.dir}" />
 	</target>
 
 	<target name="compile-test" depends="clean, jar">
 		<mkdir dir="${classes.dir}" />
 		<javac srcdir="${test.dir}" destdir="${classes.dir}" classpathref="classpath.test" optimize="on" failonerror="true" />
 		<copy todir="${classes.dir}">
-			<fileset dir="${test.dir}" excludes="**/*.java"/>
+			<fileset dir="${test.dir}">
+				<exclude name="**/*.java"/>
+				<exclude name="**/*svn"/>
+			</fileset>
 		</copy>
 	</target>
 
 	<target name="jar-test" depends="compile-test">
 		<mkdir dir="${jar.dir}" />
-		<jar destfile="${jar.dir}/${ant.project.name}-test.jar" basedir="${classes.dir}">
-			<manifest>
-				<attribute name="Main-Class" value="${main-class}" />
-			</manifest>
-		</jar>
+		<pathconvert property="mf.classpath" pathsep=" " refid="classpath.test">
+			<flattenmapper />
+		</pathconvert>
+
+		<jar destfile="${jar.dir}/${ant.project.name}-test.jar" basedir="${classes.dir}"/>
 	</target>
 
-	<target name="run-test" depends="jar-test">
+	<target name="run-test">
 		<java fork="true" classname="${main-class}">
 			<classpath>
 				<path refid="classpath" />
-				<path id="application" location="${jar.dir}/${ant.project.name}.jar" />
+				<path id="application" location="${jar.dir}/${ant.project.name}-test.jar" />
 			</classpath>
 		</java>
 	</target>
 
-	<target name="junit" depends="run-test" description="executes tests">
+	<target name="junit" depends="jar-test">
 		<mkdir dir="${report.dir}" />
 		<junit printsummary="yes" haltonerror="false" haltonfailure="false">
 			<classpath>
-				<path refid="classpath" />
 				<path refid="classpath.test" />
-				<path location="${jar.dir}/${ant.project.name}.jar" />
+				<path location="${jar.dir}/${ant.project.name}-test.jar" />
 				<pathelement path="${java.class.path}" />
 			</classpath>
 
@@ -103,7 +147,7 @@
 		</junit>
 	</target>
 
-	<target name="junitreport">
+	<target name="junitreport" depends="junit" description="executes tests and generates report">
 		<junitreport todir="${report.dir}">
 			<fileset dir="${report.dir}" includes="TEST-*.xml" />
 			<report todir="${report.dir}" />
