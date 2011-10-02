@@ -44,10 +44,6 @@ class Configuration {
 		return PROPERTIES.getProperty("xml.temp.name");
 	}
 	
-	static String getDateFormat() {
-		return PROPERTIES.getProperty("date.format");
-	}
-	
 	static float getScaleFactor() {
 		try {
 			return Float.valueOf(PROPERTIES.getProperty("file.scale.factor")).floatValue();
