@@ -8,6 +8,7 @@
 	<property name="jar.dir" value="${build.dir}/jar" />
 	<property name="lib.dir" value="lib" />
 	<property name="conf.dir" value="conf" />
+	<property name="license.dir" value="licenses" />
 	<property name="dest.dir" value="${build.dir}/dest" />
 	<property name="report.dir" value="${build.dir}/junitreport" />
 
@@ -90,6 +91,7 @@
 				<include name="all.pdf" />
 				<include name="last.pdf" />
 				<include name="${conf.dir}/*" />
+				<include name="${license.dir}/*"/>
 			</fileset>
 		</copy>
 		<zip destfile="${dest.dir}/${ant.project.name}.zip" basedir="${dest.dir}" />
