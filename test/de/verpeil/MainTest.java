@@ -14,6 +14,7 @@ public class MainTest {
 	public void testMain() {
 		final Main main = new Main();
 		assertNotNull(main);
+		main.extractImageUrl();
 		main.storeToFile();
 		
 		final File allPdf = new File(Configuration.getAllFile());
