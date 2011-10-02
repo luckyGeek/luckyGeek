@@ -11,28 +11,38 @@ public class Main {
 			.getCanonicalName());
 	private final FileDownloader fd = new FileDownloader();
 	private final DataProvider dp = new DataProvider();
+	private final Memory memory = new Memory();
+	private String imageUrl = "";
 
-	private void procss() {
+	private void process() {
 		LOG.info("Begin: " + new Date());
-		storeToFile();
-		appendToPDF();
-		cleanUp();
+		extractImageUrl();
+		if (isNewImage()) {
+			LOG.info("New image detected. Start downloading.");
+			storeToFile();
+			appendToPDF();
+			save();
+			cleanUp();
+		}
 		LOG.info("End: " + new Date());
+	}
+	
+	void extractImageUrl() {
+		LOG.info("Begin: extract image url.");
+		File xmlFeed = fd.download(Configuration.getDownloadUrl(),
+				Configuration.getTempXmlName());
+		imageUrl = dp.extractImageUrl(xmlFeed);
+		xmlFeed.deleteOnExit();
+		LOG.info("End: extract image url: " + imageUrl);
+	}
+	
+	boolean isNewImage() {
+		return !memory.getUrl().equals(imageUrl);
 	}
 
 	void storeToFile() {
 		LOG.info("Begin storeToFile.");
-		
-		File xmlFeed = fd.download(Configuration.getDownloadUrl(),
-				Configuration.getTempXmlName());
-		String imageUrl = dp.extractImageUrl(xmlFeed);
-
-		LOG.fine(imageUrl);
-		File image = fd.download(imageUrl, Configuration.getLastImage());
-		LOG.fine(image.getAbsolutePath());
-
-		xmlFeed.deleteOnExit();
-		
+		fd.download(imageUrl, Configuration.getLastImage());
 		LOG.info("End storeToFile.");
 	}
 
@@ -52,14 +62,17 @@ public class Main {
 		}
 		LOG.info("End append to pdf.");
 	}
+	
+	private void save() {
+		memory.setUrl(imageUrl);
+		memory.save();
+	}
 
 	private void cleanUp() {
 		// TODO Delte TMP-Files
-
 	}
 
 	public static void main(String[] args) {
-		new Main().procss();
+		new Main().process();
 	}
-
 }

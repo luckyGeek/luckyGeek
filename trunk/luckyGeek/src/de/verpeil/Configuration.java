@@ -1,36 +1,29 @@
 package de.verpeil;
 
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.IOUtils;
+
 class Configuration {
 	private static final Logger LOG = Logger.getLogger(Configuration.class.getCanonicalName());
-	private static final String CONF_FILE = "conf.properties";
+	private static final String CONF_FILE = "./conf/conf.properties";
 	private static final Properties PROPERTIES = new Properties();
 
 	static {
 		InputStream ins = null;
 		try {
-			ins = Configuration.class.getResourceAsStream(CONF_FILE);
+			ins = new FileInputStream(CONF_FILE);
 			PROPERTIES.load(ins);
 		} catch (Exception e) {
 			LOG.severe("Error while reading configuration file: " + e.getMessage());
 		} finally {
-			closeStream(ins);
+			IOUtils.closeQuietly(ins);
 		}
 	}
 
-	private static void closeStream(InputStream ins) {
-		try {
-			if (ins != null) {
-				ins.close();
-			}
-		} catch (Exception e) {
-			// ignore
-		}
-	}
-	
 	static String getDownloadUrl() {
 		return PROPERTIES.getProperty("download.url");
 	}
@@ -49,6 +42,10 @@ class Configuration {
 	
 	static String getTempXmlName() {
 		return PROPERTIES.getProperty("xml.temp.name");
+	}
+	
+	static String getDateFormat() {
+		return PROPERTIES.getProperty("date.format");
 	}
 	
 	static float getScaleFactor() {
