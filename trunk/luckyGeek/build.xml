@@ -37,6 +37,7 @@
 
 	<target name="clean">
 		<delete dir="${build.dir}" />
+		<delete dir="${buildxml.home}/MANIFEST.MF" />
 	</target>
 
 	<target name="compile" depends="clean">
@@ -95,6 +96,14 @@
 			</fileset>
 		</copy>
 		<zip destfile="${dest.dir}/${ant.project.name}.zip" basedir="${dest.dir}" />
+	</target>
+
+	<target name="run" description="executes jar">
+		<java fork="true" classname="${main-class}">
+			<classpath>
+				<path location="${dest.dir}/${ant.project.name}.jar" />
+			</classpath>
+		</java>
 	</target>
 
 	<target name="compile-test" depends="clean, jar">
