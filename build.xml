@@ -8,6 +8,7 @@
 	<property name="jar.dir" value="${build.dir}/jar" />
 	<property name="lib.dir" value="lib" />
 	<property name="conf.dir" value="conf" />
+	<property name="log.dir" value="logs" />
 	<property name="license.dir" value="licenses" />
 	<property name="dest.dir" value="${build.dir}/dest" />
 	<property name="report.dir" value="${build.dir}/junitreport" />
@@ -72,6 +73,7 @@
 		<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}" manifest="MANIFEST.MF">
 			<zipfileset dir="${buildxml.home}">
 				<include name="${conf.dir}/*"/>
+				<include name="${log.dir}"/>
 			</zipfileset>
 		</jar>
 	</target>
@@ -91,8 +93,10 @@
 				<include name="README*"/>
 				<include name="all.pdf" />
 				<include name="last.pdf" />
+				<include name="logging.*" />
 				<include name="${conf.dir}/*" />
 				<include name="${license.dir}/*"/>
+				<include name="${log.dir}"/>
 			</fileset>
 		</copy>
 		<zip destfile="${dest.dir}/${ant.project.name}.zip" basedir="${dest.dir}" />
