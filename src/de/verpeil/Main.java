@@ -29,7 +29,27 @@
  */
 
 package de.verpeil;
-
+/*
+ * 							LICENSE
+ * 
+ * The lucky geek. Downloads the latest geek & poke comic and optionally merges with an PDF.
+ * 
+ * Copyright (C) 2011  ctvoigt, chripo2701
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ */
 import java.io.File;
 import java.util.Date;
 import java.util.logging.Logger;
@@ -43,8 +63,8 @@ public class Main {
 	private final FileDownloader fd = new FileDownloader();
 	private final DataProvider dp = new DataProvider();
 	private final Memory memory = new Memory();
-	private boolean merged = false;
-	private String imageUrl = "";
+	private volatile boolean merged = false;
+	private volatile String imageUrl = "";
 
 	private void process() {
 		LOG.info("Begin: " + new Date());
@@ -55,6 +75,9 @@ public class Main {
 			appendToPDF();
 			save();
 			cleanUp();
+			LOG.info("Finished processing new image.");
+		} else {
+			LOG.info("No new image detected. Exit program.");
 		}
 		LOG.info("End: " + new Date());
 	}
