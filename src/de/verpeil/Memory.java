@@ -43,6 +43,7 @@ import org.apache.commons.io.IOUtils;
 class Memory {
 	private static final Logger LOG = Logger.getLogger(Memory.class
 			.getCanonicalName());
+	private static final String KEY = "url";
 	private static final File MEMORY_FILE = new File("./conf/memory.properties");
 	private final Properties memory = new Properties();
 
@@ -59,11 +60,11 @@ class Memory {
 	}
 
 	String getUrl() {
-		return memory.getProperty("url", "");
+		return memory.getProperty(KEY, "");
 	}
 
 	void setUrl(String url) {
-		memory.setProperty("url", url);
+		memory.setProperty(KEY, url);
 	}
 	
 	void save() {
