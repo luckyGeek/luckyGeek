@@ -15,6 +15,7 @@
 
 	<property name="test-all-class" value="de.verpeil.AllTests" />
 
+	<property name="package" value="de.verpeil" />
 	<property name="class-loader" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader" />
 	<property name="main-class" value="de.verpeil.Main" />
 	<property name="manifest.main.class" value="${main-class}" />
@@ -109,7 +110,25 @@
 			</classpath>
 		</java>
 	</target>
-
+	
+	<target name="javadoc">
+		<javadoc packagenames="${package}.*"
+		           sourcepath="src"
+		           destdir="docs/api" 
+		           author="true"
+		           version="true"
+		           use="true"
+		           windowtitle="Lucky Geek API"
+			       access="package"
+				   docencoding="UTF-8">
+		    <doctitle><![CDATA[<h1>LuckyGeek</h1>]]></doctitle>
+		    <bottom><![CDATA[<i>luckyGeek 2011.</i>]]></bottom>
+		    <group title="Group 1 Packages" packages="${package}.*"/>
+		    <link offline="true" href="http://sourceforge.net/p/luckygeek/home/Home/" packagelistLoc="."/>
+		    <link href="http://sourceforge.net/p/luckygeek/home/Home/"/>
+		  </javadoc>
+	</target>
+	
 	<target name="compile-test" depends="clean, jar">
 		<mkdir dir="${classes.dir}" />
 		<javac srcdir="${test.dir}" destdir="${classes.dir}" classpathref="classpath.test" optimize="on" failonerror="true" />
