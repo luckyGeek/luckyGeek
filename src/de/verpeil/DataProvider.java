@@ -38,6 +38,9 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.input.SAXBuilder;
 
+/**
+ * Downloads feed and extracts url. 
+ */
 class DataProvider {
 	private static final Logger LOG = Logger.getLogger(DataProvider.class.getCanonicalName());
 	private static final String FIRST_ENTRY = "entry";

@@ -10,6 +10,7 @@
 	<classpathentry kind="lib" path="lib/commons-io-2.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/fontbox-1.6.0.jar"/>
 	<classpathentry kind="lib" path="lib/jmagick.jar"/>
-	<classpathentry kind="var" path="IMAGEMAGICK"/>
+	<classpathentry kind="lib" path="lib/im4java-1.2.0-1.5.jar"/>
+	<classpathentry kind="var" path="IMAGE_MAGICK"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

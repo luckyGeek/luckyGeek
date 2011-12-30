@@ -1,5 +1,5 @@
 /**********************************
- * FileDownloader.java
+ * JMagickConverter.java
  * Part of the project "luckyGeek" from
  * ctvoigt (Christian Voigt), chripo2701  2011.
  *
@@ -10,7 +10,7 @@
  * 
  **********************************
  * 
- * Downloads an file from HTTP-Server.
+ * Converts an image to a PDF-file using JMagick. Requires imagemagick.
  **********************************
  * 
  * This program is free software; you can redistribute it
@@ -27,38 +27,41 @@
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
  */
-
 package de.verpeil;
 
+import java.awt.Rectangle;
 import java.io.File;
-import java.net.URL;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.FileUtils;
+import magick.ImageInfo;
+import magick.MagickImage;
 
 /**
- * Downloads a file from url. 
+ * <b>Implementation</b> of <code>{@link Converter}</code>. 
  */
-class FileDownloader {
-	private static final Logger LOG = Logger.getLogger(FileDownloader.class.getCanonicalName());
+class JMagickConverter implements Converter {
+	private static final Logger LOG = Logger.getLogger(JMagickConverter.class.getCanonicalName());
 	
-	File download(String url, String dest) {
-		File result = null;
+	@Override
+	public boolean convert(File imageFile) {
+		boolean result = false;
+		MagickImage originalImage = null;
 		try {
-			result = download(new URL(url), dest);
+			ImageInfo imageInfo = new ImageInfo(imageFile.getAbsolutePath());
+			originalImage = new MagickImage(imageInfo);
+			originalImage.setFileName(Configuration.getLastFile());
+			// fit for A4
+			originalImage.cropImage(new Rectangle(0,0,960,720));
+			
+			ImageInfo pdf = new ImageInfo();
+			originalImage.writeImage(pdf);
+			result = true;
 		} catch (Exception e) {
-			LOG.severe(String.format("Can not establish connection to url '%s'. Message: %s.", url, e.getMessage()));
-		}
-		return result;
-	}
-
-	File download(URL url, String dest) {
-		File result = null;
-		try {
-			result = new File(dest);
-			FileUtils.copyURLToFile(url, result);
-		} catch (Exception e) {
-			LOG.severe(String.format("Can not download file from url '%s'. Message: %s.", url, e.getMessage()));
+			LOG.severe(String.format("Can not scale image. Aborting. Message: %s.", e.getMessage()));
+		} finally {
+			if (originalImage != null) {
+				originalImage.destroyImages();
+			}
 		}
 		return result;
 	}

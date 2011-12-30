@@ -1,5 +1,5 @@
 /**********************************
- * FileDownloader.java
+ * DataProviderTest.java
  * Part of the project "luckyGeek" from
  * ctvoigt (Christian Voigt), chripo2701  2011.
  *
@@ -10,7 +10,7 @@
  * 
  **********************************
  * 
- * Downloads an file from HTTP-Server.
+ * Test-case for DataProvider.java.
  **********************************
  * 
  * This program is free software; you can redistribute it
@@ -27,39 +27,38 @@
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
  */
-
 package de.verpeil;
 
 import java.io.File;
-import java.net.URL;
-import java.util.logging.Logger;
 
-import org.apache.commons.io.FileUtils;
+import org.junit.Before;
+import org.junit.Test;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertEquals;
 
 /**
- * Downloads a file from url. 
+ * Tests <code>{@link DataProvider}</code>. 
  */
-class FileDownloader {
-	private static final Logger LOG = Logger.getLogger(FileDownloader.class.getCanonicalName());
+public class DataProviderTest {
+	private DataProvider provider = null;
 	
-	File download(String url, String dest) {
-		File result = null;
-		try {
-			result = download(new URL(url), dest);
-		} catch (Exception e) {
-			LOG.severe(String.format("Can not establish connection to url '%s'. Message: %s.", url, e.getMessage()));
-		}
-		return result;
+	@Before
+	public void before() {
+		provider = null;
+		assertNull(provider);
+		provider = new DataProvider();
+		assertNotNull(provider);
 	}
 
-	File download(URL url, String dest) {
-		File result = null;
-		try {
-			result = new File(dest);
-			FileUtils.copyURLToFile(url, result);
-		} catch (Exception e) {
-			LOG.severe(String.format("Can not download file from url '%s'. Message: %s.", url, e.getMessage()));
-		}
-		return result;
+	@Test
+	public void testExtractImageUrl() {
+		assertEquals("", provider.extractImageUrl(null));
+		assertEquals("", provider.extractImageUrl(new File(".")));
+		assertEquals("", provider.extractImageUrl(new File("testres/not-an-xml.txt")));
+		assertEquals("", provider.extractImageUrl(new File("testres/empty-xml.xml")));
+		assertEquals("", provider.extractImageUrl(new File("testres/invalid.xml")));
+		assertEquals("http://geekandpoke.typepad.com/.a/6a00d8341d3df553ef015438d0e316970c-pi", provider.extractImageUrl(new File("testres/valid.xml")));
 	}
 }

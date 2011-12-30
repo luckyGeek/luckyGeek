@@ -1,5 +1,5 @@
 /**********************************
- * FileDownloader.java
+ * Converter.java
  * Part of the project "luckyGeek" from
  * ctvoigt (Christian Voigt), chripo2701  2011.
  *
@@ -10,7 +10,7 @@
  * 
  **********************************
  * 
- * Downloads an file from HTTP-Server.
+ * Interface for image to pdf conversion.
  **********************************
  * 
  * This program is free software; you can redistribute it
@@ -27,39 +27,13 @@
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
  */
-
 package de.verpeil;
 
 import java.io.File;
-import java.net.URL;
-import java.util.logging.Logger;
-
-import org.apache.commons.io.FileUtils;
 
 /**
- * Downloads a file from url. 
+ * <b>Interface</b> for image conversion.
  */
-class FileDownloader {
-	private static final Logger LOG = Logger.getLogger(FileDownloader.class.getCanonicalName());
-	
-	File download(String url, String dest) {
-		File result = null;
-		try {
-			result = download(new URL(url), dest);
-		} catch (Exception e) {
-			LOG.severe(String.format("Can not establish connection to url '%s'. Message: %s.", url, e.getMessage()));
-		}
-		return result;
-	}
-
-	File download(URL url, String dest) {
-		File result = null;
-		try {
-			result = new File(dest);
-			FileUtils.copyURLToFile(url, result);
-		} catch (Exception e) {
-			LOG.severe(String.format("Can not download file from url '%s'. Message: %s.", url, e.getMessage()));
-		}
-		return result;
-	}
+interface Converter {
+	boolean convert(File imageFile);
 }

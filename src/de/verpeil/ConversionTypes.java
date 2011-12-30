@@ -1,5 +1,5 @@
 /**********************************
- * FileDownloader.java
+ * ConversionTypes.java
  * Part of the project "luckyGeek" from
  * ctvoigt (Christian Voigt), chripo2701  2011.
  *
@@ -10,7 +10,7 @@
  * 
  **********************************
  * 
- * Downloads an file from HTTP-Server.
+ * Enumeration of all possible image to pdf converts.
  **********************************
  * 
  * This program is free software; you can redistribute it
@@ -27,39 +27,47 @@
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
  */
-
 package de.verpeil;
 
-import java.io.File;
-import java.net.URL;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.FileUtils;
-
 /**
- * Downloads a file from url. 
+ * Containes types for conversion.
  */
-class FileDownloader {
-	private static final Logger LOG = Logger.getLogger(FileDownloader.class.getCanonicalName());
-	
-	File download(String url, String dest) {
-		File result = null;
+enum ConversionTypes {
+	PDFBOX, 
+	IMAGEMAGICK {
+		@Override
+		public Converter createConverter() {
+			return new ConverterDecorator(new ImagemagickConverter());
+		}
+	},
+	JMAGICK {
+		@Override
+		public Converter createConverter() {
+			return new ConverterDecorator(new JMagickConverter());
+		}
+	};
+
+	private static final Logger LOG = Logger.getLogger(ConversionTypes.class
+			.getCanonicalName());
+
+	static ConversionTypes parse(String value) {
+		ConversionTypes result = PDFBOX;
+		if (value == null || value.isEmpty()) {
+			return result;
+		}
+
 		try {
-			result = download(new URL(url), dest);
+			result = ConversionTypes.valueOf(value.toUpperCase());
 		} catch (Exception e) {
-			LOG.severe(String.format("Can not establish connection to url '%s'. Message: %s.", url, e.getMessage()));
+			LOG.warning(String.format("Can not parse value '%s'. Message: %s.",
+					value, e.getMessage()));
 		}
 		return result;
 	}
 
-	File download(URL url, String dest) {
-		File result = null;
-		try {
-			result = new File(dest);
-			FileUtils.copyURLToFile(url, result);
-		} catch (Exception e) {
-			LOG.severe(String.format("Can not download file from url '%s'. Message: %s.", url, e.getMessage()));
-		}
-		return result;
+	Converter createConverter() {
+		return new ConverterDecorator(new PdfBoxConverter());
 	}
 }

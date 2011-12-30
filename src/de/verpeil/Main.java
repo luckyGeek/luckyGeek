@@ -27,29 +27,8 @@
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
  */
-
 package de.verpeil;
-/*
- * 							LICENSE
- * 
- * The lucky geek. Downloads the latest geek & poke comic and optionally merges with an PDF.
- * 
- * Copyright (C) 2011  ctvoigt, chripo2701
- * 
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License.
- * 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
+
 import java.io.File;
 import java.util.Date;
 import java.util.logging.Logger;
@@ -57,6 +36,9 @@ import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.util.PDFMergerUtility;
 
+/**
+ * Entry point of lucky geek. 
+ */
 public class Main {
 	private static final Logger LOG = Logger.getLogger(Main.class
 			.getCanonicalName());
@@ -70,8 +52,9 @@ public class Main {
 		LOG.info("Begin: " + new Date());
 		extractImageUrl();
 		if (isNewImage()) {
-			LOG.info("New image detected. Start downloading.");
+			LOG.info("New image detected. Begin process.");
 			storeToFile();
+			convert();
 			appendToPDF();
 			save();
 			cleanUp();
@@ -83,12 +66,12 @@ public class Main {
 	}
 	
 	void extractImageUrl() {
-		LOG.info("Begin: extract image url.");
+		LOG.fine("Begin: extract image url.");
 		File xml = fd.download(Configuration.getDownloadUrl(),
 				Configuration.getTempXmlName());
 		imageUrl = dp.extractImageUrl(xml);
 		FileUtils.deleteQuietly(xml);
-		LOG.info("End: extract image url: " + imageUrl);
+		LOG.info("Url extracted: " + imageUrl);
 	}
 	
 	boolean isNewImage() {
@@ -96,16 +79,23 @@ public class Main {
 	}
 
 	void storeToFile() {
-		LOG.info("Begin download.");
+		LOG.fine("Begin download.");
 		fd.download(imageUrl, Configuration.getLastImage());
-		LOG.info("End download.");
+		LOG.info("End downloading from url.");
+	}
+	
+	private void convert() {
+		LOG.fine("Begin converting.");
+		ConversionTypes type = Configuration.getConversionType();
+		Converter converter = type.createConverter();
+		converter.convert(new File(Configuration.getLastImage()));
+		LOG.fine("End converting image to PDF.");
 	}
 
 	private void appendToPDF() {
-		LOG.info("Begin append to pdf.");
+		LOG.fine("Begin append to pdf.");
 		String allPdf = Configuration.getAllFile();
 		String lastPdf = Configuration.getLastFile();
-		(new ImageToPDFConverter()).convert();
 		
 		if (!exists(lastPdf)){
 			LOG.warning("No pdf for merging found. Cancel merging.");
@@ -122,7 +112,7 @@ public class Main {
 		} catch (Exception e) {
 			LOG.severe("Can not merge pdfs: " + e.getMessage());
 		}
-		LOG.info("End append to pdf.");
+		LOG.info("Appended to pdf.");
 	}
 	
 	private boolean exists(String path) {
@@ -132,7 +122,7 @@ public class Main {
 	
 	private void save() {
 		if (merged) {
-			LOG.info("Saving.");
+			LOG.fine("Saving.");
 			memory.setUrl(imageUrl);
 			memory.save();
 			LOG.info("Saved.");
@@ -140,7 +130,7 @@ public class Main {
 	}
 
 	private void cleanUp() {
-		LOG.info("Cleaning up.");
+		LOG.fine("Cleaning up.");
 		FileUtils.deleteQuietly(new File(Configuration.getLastFile()));
 		LOG.info("Cleaned up.");
 	}

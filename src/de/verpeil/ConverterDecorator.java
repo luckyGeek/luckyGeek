@@ -1,5 +1,5 @@
 /**********************************
- * FileDownloader.java
+ * ConverterDecorator.java
  * Part of the project "luckyGeek" from
  * ctvoigt (Christian Voigt), chripo2701  2011.
  *
@@ -10,7 +10,7 @@
  * 
  **********************************
  * 
- * Downloads an file from HTTP-Server.
+ * Class for decorating converters.
  **********************************
  * 
  * This program is free software; you can redistribute it
@@ -27,39 +27,33 @@
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
  */
-
 package de.verpeil;
 
 import java.io.File;
-import java.net.URL;
 import java.util.logging.Logger;
 
-import org.apache.commons.io.FileUtils;
-
 /**
- * Downloads a file from url. 
+ * <b>Decorator</b> of <code>{@link Converter}</code>. 
  */
-class FileDownloader {
-	private static final Logger LOG = Logger.getLogger(FileDownloader.class.getCanonicalName());
+class ConverterDecorator implements Converter {
+	private static final Logger LOG = Logger.getLogger(ConverterDecorator.class.getCanonicalName());
+	private final Converter converter;
 	
-	File download(String url, String dest) {
-		File result = null;
-		try {
-			result = download(new URL(url), dest);
-		} catch (Exception e) {
-			LOG.severe(String.format("Can not establish connection to url '%s'. Message: %s.", url, e.getMessage()));
-		}
+	ConverterDecorator(final Converter converter) {
+		LOG.fine("Adding converter: " + converter);
+		this.converter = converter;
+	}
+	
+	Converter getConverter() {
+		return converter;
+	}
+
+	@Override
+	public boolean convert(File imageFile) {
+		LOG.fine("Converting image: " + imageFile.getAbsolutePath());
+		boolean result = converter.convert(imageFile);
+		LOG.fine("Conversion was successful: " + Boolean.toString(result));
 		return result;
 	}
 
-	File download(URL url, String dest) {
-		File result = null;
-		try {
-			result = new File(dest);
-			FileUtils.copyURLToFile(url, result);
-		} catch (Exception e) {
-			LOG.severe(String.format("Can not download file from url '%s'. Message: %s.", url, e.getMessage()));
-		}
-		return result;
-	}
 }
