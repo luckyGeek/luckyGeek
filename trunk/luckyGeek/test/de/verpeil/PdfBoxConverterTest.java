@@ -1,5 +1,5 @@
 /**********************************
- * FileDownloader.java
+ * PdfBoxConverterTest.java
  * Part of the project "luckyGeek" from
  * ctvoigt (Christian Voigt), chripo2701  2011.
  *
@@ -10,7 +10,7 @@
  * 
  **********************************
  * 
- * Downloads an file from HTTP-Server.
+ * Test-case for PdfBoxConverter.java.
  **********************************
  * 
  * This program is free software; you can redistribute it
@@ -27,39 +27,23 @@
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
  */
-
 package de.verpeil;
 
-import java.io.File;
-import java.net.URL;
-import java.util.logging.Logger;
+import static org.junit.Assert.assertTrue;
 
-import org.apache.commons.io.FileUtils;
+import java.io.File;
+
+import org.junit.Test;
 
 /**
- * Downloads a file from url. 
- */
-class FileDownloader {
-	private static final Logger LOG = Logger.getLogger(FileDownloader.class.getCanonicalName());
+ * Tests <code>{@link PdfBoxConverter}</code>.
+ */ 
+public class PdfBoxConverterTest {
 	
-	File download(String url, String dest) {
-		File result = null;
-		try {
-			result = download(new URL(url), dest);
-		} catch (Exception e) {
-			LOG.severe(String.format("Can not establish connection to url '%s'. Message: %s.", url, e.getMessage()));
-		}
-		return result;
-	}
-
-	File download(URL url, String dest) {
-		File result = null;
-		try {
-			result = new File(dest);
-			FileUtils.copyURLToFile(url, result);
-		} catch (Exception e) {
-			LOG.severe(String.format("Can not download file from url '%s'. Message: %s.", url, e.getMessage()));
-		}
-		return result;
+	@Test
+	public void testPdfBoxConverter() {
+		final PdfBoxConverter converter = new PdfBoxConverter();
+		final boolean result = converter.convert(new File(Configuration.getLastImage()));
+		assertTrue(result);
 	}
 }

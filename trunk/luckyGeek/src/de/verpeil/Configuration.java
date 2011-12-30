@@ -37,6 +37,9 @@ import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 
+/**
+ * <b>Singleton</b> for read-access of configuration. 
+ */
 class Configuration {
 	private static final Logger LOG = Logger.getLogger(Configuration.class.getCanonicalName());
 	private static final String CONF_FILE = "./conf/conf.properties";
@@ -74,12 +77,7 @@ class Configuration {
 		return PROPERTIES.getProperty("xml.temp.name");
 	}
 	
-	static float getScaleFactor() {
-		try {
-			return Float.valueOf(PROPERTIES.getProperty("file.scale.factor")).floatValue();
-		} catch (NumberFormatException e) {
-			LOG.warning("Can not read scale factor. Using default. Message: " + e.getMessage());
-			return Float.valueOf(1);
-		}
+	static ConversionTypes getConversionType() {
+		return ConversionTypes.parse(PROPERTIES.getProperty("type.conversion", ""));
 	}
 }

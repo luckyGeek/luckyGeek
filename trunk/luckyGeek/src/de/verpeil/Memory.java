@@ -40,6 +40,9 @@ import java.util.logging.Logger;
 
 import org.apache.commons.io.IOUtils;
 
+/**
+ * Read-write access to last used url. 
+ */
 class Memory {
 	private static final Logger LOG = Logger.getLogger(Memory.class
 			.getCanonicalName());
