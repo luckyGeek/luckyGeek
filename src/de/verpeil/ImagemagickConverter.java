@@ -41,18 +41,12 @@ import org.im4java.core.IMOperation;
 class ImagemagickConverter implements Converter {
 	private static final Logger LOG = Logger
 			.getLogger(ImagemagickConverter.class.getCanonicalName());
-	private static final String SEARCH_PATH = System.getProperty("java.class.path");
 
 	@Override
 	public boolean convert(File imageFile) {
 		boolean result = false;
 		try {
 			ConvertCmd cmd = new ConvertCmd();
-			// set path to convert.exe on windows
-			// workaround: using system-class path
-			// imagick must be on system-class path
-			cmd.setSearchPath(SEARCH_PATH);
-
 			// create the operation, add images and operators/options
 			IMOperation op = new IMOperation();
 			op.addImage(imageFile.getAbsolutePath());
