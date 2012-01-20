@@ -22,8 +22,8 @@
 	<property name="manifest.built.by" value="lucky geeks" />
 	<property name="manifest.created.by" value="lucky geeks" />
 
-	<property name="version.number" value="0.1" />
-	<property name="build.number" value="0.1" />
+	<property name="version.number" value="0.233" />
+	<property name="build.number" value="$Rev$" />
 
 	<path id="classpath">
 		<fileset dir="${buildxml.home}">
