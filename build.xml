@@ -12,7 +12,7 @@
 	<property name="conf.dir" value="conf" />
 	<property name="log.dir" value="logs" />
 	<property name="license.dir" value="licenses" />
-	<property name="doc.dir" value="doc" />
+	<property name="doc.dir" value="${build.dir}/doc" />
 	<property name="dest.dir" value="${build.dir}/dest" />
 	<property name="release.dir" value="${build.dir}/release" />
 	<property name="report.dir" value="${build.dir}/junitreport" />
