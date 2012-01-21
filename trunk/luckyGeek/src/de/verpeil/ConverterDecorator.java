@@ -51,7 +51,12 @@ class ConverterDecorator implements Converter {
 	@Override
 	public boolean convert(File imageFile) {
 		LOG.fine("Converting image: " + imageFile.getAbsolutePath());
-		boolean result = converter.convert(imageFile);
+		boolean result = false;
+		try {
+			result = converter.convert(imageFile);
+		} catch (Exception e) {
+			LOG.severe("Error while converting image. Message: " + e.getMessage());
+		}
 		LOG.fine("Conversion was successful: " + Boolean.toString(result));
 		return result;
 	}

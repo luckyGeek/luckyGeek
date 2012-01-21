@@ -56,6 +56,10 @@ class Configuration {
 			IOUtils.closeQuietly(ins);
 		}
 	}
+	
+	static int getPropertiesCount() {
+		return PROPERTIES.size();
+	}
 
 	static String getDownloadUrl() {
 		return PROPERTIES.getProperty("download.url");
@@ -79,5 +83,13 @@ class Configuration {
 	
 	static ConversionTypes getConversionType() {
 		return ConversionTypes.parse(PROPERTIES.getProperty("type.conversion", ""));
+	}
+	
+	static boolean isSilentPrintAllowed() {
+		return Boolean.valueOf(PROPERTIES.getProperty("file.last.print.silent", "false")).booleanValue();
+	}
+	
+	static boolean isMergeAllowed() {
+		return Boolean.valueOf(PROPERTIES.getProperty("file.all.merge", "false")).booleanValue();
 	}
 }

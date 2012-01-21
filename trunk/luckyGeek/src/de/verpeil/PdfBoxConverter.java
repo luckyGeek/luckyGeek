@@ -37,6 +37,7 @@ import java.util.logging.Logger;
 import org.apache.pdfbox.io.RandomAccessFile;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDCcitt;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDJpeg;
@@ -80,11 +81,11 @@ class PdfBoxConverter implements Converter {
 			}
 
 			// new lines
+			PDRectangle rectangle = page.getMediaBox();
 			contentStream = new PDPageContentStream(doc, page);
-			contentStream.drawXObject(ximage, 0, 0, PDPage.PAGE_SIZE_A4.getWidth(), PDPage.PAGE_SIZE_A4.getHeight());
+			contentStream.drawXObject(ximage, 0, 0, rectangle.getWidth(), rectangle.getHeight());
 			contentStream.close();
 			doc.save(Configuration.getLastFile());
-			
 			result = true;
 		} catch (Exception e) {
 			LOG.severe("Can not transform image to pdf: " + e.getMessage());
