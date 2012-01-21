@@ -29,6 +29,7 @@
  */
 package de.verpeil;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -42,11 +43,11 @@ import org.junit.Test;
  */
 public class ConverterDecoratorTest {
 	
-	@Test(expected=NullPointerException.class)
-	public void testDecoratorRaisesException() {
+	@Test
+	public void testDecoratorCatchesException() {
 		final ConverterDecorator decorator = new ConverterDecorator(null);
 		assertNull(decorator.getConverter());
-		decorator.convert(new File(Configuration.getLastImage()));
+		assertFalse(decorator.convert(new File(Configuration.getLastImage())));
 	}
 	
 	@Test
