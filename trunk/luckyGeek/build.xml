@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
-<project name="luckyGeek" default="jar" basedir=".">
+<project name="luckyGeek" default="release" basedir=".">
+	<property file="build.properties"/>
+	
 	<property name="buildxml.home" value="." />
 	<property name="src.dir" value="src" />
 	<property name="test.dir" value="test" />
@@ -10,7 +12,9 @@
 	<property name="conf.dir" value="conf" />
 	<property name="log.dir" value="logs" />
 	<property name="license.dir" value="licenses" />
+	<property name="doc.dir" value="doc" />
 	<property name="dest.dir" value="${build.dir}/dest" />
+	<property name="release.dir" value="${build.dir}/release" />
 	<property name="report.dir" value="${build.dir}/junitreport" />
 
 	<property name="test-all-class" value="de.verpeil.AllTests" />
@@ -22,9 +26,9 @@
 	<property name="manifest.built.by" value="lucky geeks" />
 	<property name="manifest.created.by" value="lucky geeks" />
 
-	<property name="version.number" value="0.233" />
 	<property name="build.number" value="$Rev$" />
-
+	<property name="release-name" value="${ant.project.name}-${version.number}" />
+		
 	<path id="classpath">
 		<fileset dir="${buildxml.home}">
 			<include name="${lib.dir}/*.jar"/>
@@ -78,8 +82,26 @@
 			</zipfileset>
 		</jar>
 	</target>
+	
+	<target name="javadoc">
+		<javadoc packagenames="${package}.*"
+		           sourcepath="${src.dir}"
+		           destdir="${doc.dir}" 
+		           author="true"
+		           version="true"
+		           use="true"
+		           windowtitle="Lucky Geek API"
+			       access="package"
+				   docencoding="UTF-8">
+		    <doctitle><![CDATA[<h1>LuckyGeek</h1>]]></doctitle>
+		    <bottom><![CDATA[<i>luckyGeek 2011.</i>]]></bottom>
+		    <group title="Group 1 Packages" packages="${package}.*"/>
+		    <link offline="true" href="http://sourceforge.net/p/luckygeek/home/Home/" packagelistLoc="."/>
+		    <link href="http://sourceforge.net/p/luckygeek/home/Home/"/>
+		  </javadoc>
+	</target>
 
-	<target name="export" description="build zip file" depends="jar">
+	<target name="prepare-release" depends="jar, javadoc">
 		<copy todir="${dest.dir}">
 			<fileset dir="${lib.dir}">
 				<exclude name="junit*" />
@@ -100,7 +122,24 @@
 				<include name="${log.dir}"/>
 			</fileset>
 		</copy>
-		<zip destfile="${dest.dir}/${ant.project.name}.zip" basedir="${dest.dir}" />
+	</target>
+	
+	<target name="release" description="builds release files" depends="prepare-release">
+		<zip destfile="${release.dir}/${release-name}-bin.zip" basedir="${dest.dir}" />
+		<tar destfile="${release.dir}/${release-name}-bin.tar.bz2" basedir="${dest.dir}" compression="bzip2" />
+		
+		<zip destfile="${release.dir}/${release-name}-src.zip" basedir="${dest.dir}">
+			<zipfileset dir=".">
+				<include name="${src.dir}/"/>
+				<include name="${doc.dir}/" />
+			</zipfileset>
+		</zip>
+		<tar destfile="${release.dir}/${release-name}-src.tar.bz2" basedir="${dest.dir}" compression="bzip2" >
+			<zipfileset dir=".">
+				<include name="${src.dir}/"/>
+				<include name="${doc.dir}/" />
+			</zipfileset>
+		</tar>
 	</target>
 
 	<target name="run" description="executes jar">
@@ -109,24 +148,6 @@
 				<path location="${dest.dir}/${ant.project.name}.jar" />
 			</classpath>
 		</java>
-	</target>
-	
-	<target name="javadoc">
-		<javadoc packagenames="${package}.*"
-		           sourcepath="src"
-		           destdir="docs/api" 
-		           author="true"
-		           version="true"
-		           use="true"
-		           windowtitle="Lucky Geek API"
-			       access="package"
-				   docencoding="UTF-8">
-		    <doctitle><![CDATA[<h1>LuckyGeek</h1>]]></doctitle>
-		    <bottom><![CDATA[<i>luckyGeek 2011.</i>]]></bottom>
-		    <group title="Group 1 Packages" packages="${package}.*"/>
-		    <link offline="true" href="http://sourceforge.net/p/luckygeek/home/Home/" packagelistLoc="."/>
-		    <link href="http://sourceforge.net/p/luckygeek/home/Home/"/>
-		  </javadoc>
 	</target>
 	
 	<target name="compile-test" depends="clean, jar">
