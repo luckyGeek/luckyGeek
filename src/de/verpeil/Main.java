@@ -29,11 +29,14 @@
  */
 package de.verpeil;
 
+import java.awt.print.PrinterException;
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFMergerUtility;
 
 /**
@@ -42,10 +45,15 @@ import org.apache.pdfbox.util.PDFMergerUtility;
 public class Main {
 	private static final Logger LOG = Logger.getLogger(Main.class
 			.getCanonicalName());
+	
 	private final FileDownloader fd = new FileDownloader();
 	private final DataProvider dp = new DataProvider();
 	private final Memory memory = new Memory();
-	private volatile boolean merged = false;
+	private final boolean merge = Configuration.isMergeAllowed();
+	private final boolean print = Configuration.isSilentPrintAllowed();
+	
+	private volatile File lastImage = new File(Configuration.getLastImage());
+	private volatile boolean success = false;
 	private volatile String imageUrl = "";
 
 	private void process() {
@@ -55,6 +63,7 @@ public class Main {
 			LOG.info("New image detected. Begin process.");
 			storeToFile();
 			convert();
+			print();
 			appendToPDF();
 			save();
 			cleanUp();
@@ -80,7 +89,7 @@ public class Main {
 
 	void storeToFile() {
 		LOG.fine("Begin download.");
-		fd.download(imageUrl, Configuration.getLastImage());
+		lastImage = fd.download(imageUrl, Configuration.getLastImage());
 		LOG.info("End downloading from url.");
 	}
 	
@@ -88,16 +97,39 @@ public class Main {
 		LOG.fine("Begin converting.");
 		ConversionTypes type = Configuration.getConversionType();
 		Converter converter = type.createConverter();
-		converter.convert(new File(Configuration.getLastImage()));
+		converter.convert(lastImage);
 		LOG.fine("End converting image to PDF.");
+	}
+	
+	private void print() {
+		if (!print) {
+			LOG.info("Printing is disabled.");
+			return;
+		}
+		LOG.fine("Begin printing.");
+		try {
+			PDDocument.load(Configuration.getLastFile()).silentPrint();
+		} catch (PrinterException e) {
+			LOG.warning("Can not print file. Message: " + e.getMessage());
+			return;
+		} catch (IOException e) {
+			LOG.warning("No file for printing found. Message: " + e.getMessage());
+			return;
+		}
+		LOG.info("File printed.");
 	}
 
 	private void appendToPDF() {
+		if (!merge) {
+			LOG.info("Merging disabled.");
+			success = true;
+			return;
+		}
 		LOG.fine("Begin append to pdf.");
 		String allPdf = Configuration.getAllFile();
 		String lastPdf = Configuration.getLastFile();
 		
-		if (!exists(lastPdf)){
+		if (!new File(lastPdf).exists()){
 			LOG.warning("No pdf for merging found. Cancel merging.");
 			return;
 		}
@@ -108,20 +140,15 @@ public class Main {
 		mergePdf.setDestinationFileName(allPdf);
 		try {
 			mergePdf.mergeDocuments();
-			merged = true;
+			success = true;
 		} catch (Exception e) {
 			LOG.severe("Can not merge pdfs: " + e.getMessage());
 		}
 		LOG.info("Appended to pdf.");
 	}
 	
-	private boolean exists(String path) {
-		File file = new File(path);
-		return file != null && file.exists() && file.isFile();
-	}
-	
 	private void save() {
-		if (merged) {
+		if (success) {
 			LOG.fine("Saving.");
 			memory.setUrl(imageUrl);
 			memory.save();
@@ -131,7 +158,9 @@ public class Main {
 
 	private void cleanUp() {
 		LOG.fine("Cleaning up.");
-		FileUtils.deleteQuietly(new File(Configuration.getLastFile()));
+		if (merge) {
+			FileUtils.deleteQuietly(new File(Configuration.getLastFile()));
+		}
 		LOG.info("Cleaned up.");
 	}
 	

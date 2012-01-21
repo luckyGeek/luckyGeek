@@ -30,6 +30,8 @@
 package de.verpeil;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -40,11 +42,14 @@ public class ConfigurationTest {
 
 	@Test
 	public void testConfiguration() {
+		assertEquals(8, Configuration.getPropertiesCount());
 		assertEquals("http://geekandpoke.typepad.com/geekandpoke/atom.xml",	Configuration.getDownloadUrl());
 		assertEquals("all.pdf", Configuration.getAllFile());
 		assertEquals("current.jpg", Configuration.getLastImage());
 		assertEquals("last.pdf", Configuration.getLastFile());
 		assertEquals("atom.xml", Configuration.getTempXmlName());
 		assertEquals(ConversionTypes.PDFBOX, Configuration.getConversionType());
+		assertTrue(Configuration.isMergeAllowed());
+		assertFalse(Configuration.isSilentPrintAllowed());
 	}
 }
