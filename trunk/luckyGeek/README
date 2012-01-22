@@ -1,4 +1,8 @@
-		luckey geeks
+=============================================
+
+			The luckygeek project
+			
+=============================================
 		
 Hosted on sourceforge: https://sourceforge.net/p/luckygeek/home/Home/
 
@@ -8,7 +12,63 @@ Authors:
 	
 2011
 
-Execute luckyGeek:
+========
+Licenses
+========
+
+The luckygeek is licensed under GNU GENERAL PUBLIC LICENSE (GPL).
+
+Licenses of third-party are in directory licenses.
+
+==================
+Execute luckyGeek
+==================
 
 On Windows: execute "run.bat"
 On Unix: execute "run.sh"
+
+==============
+Configuration
+==============
+
+Open file conf/conf.properties.
+
+file.last = last.pdf
+Name of converted image as pdf.
+
+file.last.print.silent = false
+Print automatically without prompting after conversion.
+
+file.last.image = current.jpg
+The new detected and downloaded image
+
+file.all = all.pdf
+File for merging with file.last.
+
+file.all.merge = true
+Appends file.last to file.all
+
+xml.temp.name = atom.xml
+Temporary file of downloaded rss.
+
+download.url = http://geekandpoke.typepad.com/geekandpoke/atom.xml
+URL for rss.
+
+type.conversion = pdfbox
+Type of converting image to pdf. Possible values: pdfbox, jmagick, imagemagick.
+
+PDFBox: 
+Transforms jp(e)gs and tiffs to pdf. No Thirdparty required. Simple execute run.bat or run.sh.
+
+JMagick: 
+Native interface for Imagemagick. Requieres imagemagick - should be on your path. Can transform also other image types.
+
+Imagemagick: 
+Commandline interface for Imagemagick. Requieres imagemagick. 
+Set the environment-variable IM4JAVA_TOOLPATH. This variable should contain a list of directories to search for your tools separated by your platform-pathdelemiter (on *NIX typically ":", on Windows ";").
+
+========
+Problems
+========
+
+The luckygeek creates log-files during execution. You can find them in logs/luckygeek.log.
