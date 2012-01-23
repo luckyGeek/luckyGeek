@@ -125,8 +125,8 @@
 	</target>
 	
 	<target name="release" description="builds release files" depends="prepare-release">
-		<zip destfile="${release.dir}/${release-name}-bin.zip" basedir="${dest.dir}" />
-		<tar destfile="${release.dir}/${release-name}-bin.tar.bz2" basedir="${dest.dir}" compression="bzip2" />
+		<zip destfile="${release.dir}/${release-name}.zip" basedir="${dest.dir}" />
+		<tar destfile="${release.dir}/${release-name}.tar.bz2" basedir="${dest.dir}" compression="bzip2" />
 		
 		<zip destfile="${release.dir}/${release-name}-src.zip" basedir="${dest.dir}">
 			<zipfileset dir=".">
