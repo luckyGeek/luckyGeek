@@ -107,8 +107,15 @@ public class Main {
 			return;
 		}
 		LOG.fine("Begin printing.");
+		printLastDocument();
+		LOG.info("File printed.");
+	}
+
+	private void printLastDocument() {
 		try {
-			PDDocument.load(Configuration.getLastFile()).silentPrint();
+			PDDocument printMe = PDDocument.load(Configuration.getLastFile());
+			printMe.silentPrint();
+			printMe.close();
 		} catch (PrinterException e) {
 			LOG.warning("Can not print file. Message: " + e.getMessage());
 			return;
@@ -116,7 +123,6 @@ public class Main {
 			LOG.warning("No file for printing found. Message: " + e.getMessage());
 			return;
 		}
-		LOG.info("File printed.");
 	}
 
 	private void appendToPDF() {
