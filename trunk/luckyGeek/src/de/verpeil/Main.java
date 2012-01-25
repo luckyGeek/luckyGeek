@@ -95,10 +95,7 @@ public class Main {
 	
 	private void convert() {
 		LOG.fine("Begin converting.");
-		ConversionTypes type = Configuration.getConversionType();
-		Converter converter = type.createConverter();
-		converter.convert(lastImage);
-		LOG.fine("End converting image to PDF.");
+		convertToPdf(Configuration.getConversionType());
 	}
 	
 	private void print() {
@@ -106,16 +103,18 @@ public class Main {
 			LOG.info("Printing is disabled.");
 			return;
 		}
-		LOG.fine("Begin converting.");
-		ConversionTypes type = ConversionTypes.PDFBOX;
-		Converter converter = type.createConverter();
-		converter.convert(lastImage);
-		LOG.fine("End converting image to PDF.");
-		
-		
+		LOG.fine("Begin converting for Printing.");
+		convertToPdf(ConversionTypes.PDFBOX);
+		LOG.fine("End converting for Printing.");		
 		LOG.fine("Begin printing.");
 		printLastDocument();
 		LOG.info("File printed.");
+	}
+
+	private void convertToPdf(ConversionTypes type) {
+		Converter converter = type.createConverter();
+		converter.convert(lastImage);
+		LOG.fine("End converting image to PDF.");
 	}
 
 	private void printLastDocument() {
