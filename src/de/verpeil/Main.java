@@ -110,12 +110,15 @@ public class Main {
 			LOG.fine("Begin printing.");
 			printLastDocument();
 			LOG.info("File printed.");
-
+		} else {
+			LOG.info("File is already converted with PDF-Box: optimized for Letter-Printing; Skipping reconvert.");
 		}
+
 	}
 
 	private boolean reconvertForPrintNecesarry() {
-		return ConversionTypes.PDFBOX.equals(Configuration.getConversionType());
+		return !ConversionTypes.PDFBOX
+				.equals(Configuration.getConversionType());
 	}
 
 	private void convertToPdf(ConversionTypes type) {
