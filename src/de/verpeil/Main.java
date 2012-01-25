@@ -40,18 +40,18 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFMergerUtility;
 
 /**
- * Entry point of lucky geek. 
+ * Entry point of lucky geek.
  */
 public class Main {
 	private static final Logger LOG = Logger.getLogger(Main.class
 			.getCanonicalName());
-	
+
 	private final FileDownloader fd = new FileDownloader();
 	private final DataProvider dp = new DataProvider();
 	private final Memory memory = new Memory();
 	private final boolean merge = Configuration.isMergeAllowed();
 	private final boolean print = Configuration.isSilentPrintAllowed();
-	
+
 	private volatile File lastImage = new File(Configuration.getLastImage());
 	private volatile boolean success = false;
 	private volatile String imageUrl = "";
@@ -73,7 +73,7 @@ public class Main {
 		}
 		LOG.info("End: " + new Date());
 	}
-	
+
 	void extractImageUrl() {
 		LOG.fine("Begin: extract image url.");
 		File xml = fd.download(Configuration.getDownloadUrl(),
@@ -82,7 +82,7 @@ public class Main {
 		FileUtils.deleteQuietly(xml);
 		LOG.info("Url extracted: " + imageUrl);
 	}
-	
+
 	boolean isNewImage() {
 		return !memory.getUrl().equals(imageUrl);
 	}
@@ -92,25 +92,25 @@ public class Main {
 		lastImage = fd.download(imageUrl, Configuration.getLastImage());
 		LOG.info("End downloading from url.");
 	}
-	
+
 	private void convert() {
 		LOG.fine("Begin converting.");
 		convertToPdf(Configuration.getConversionType());
 	}
-	
+
 	private void print() {
 		if (!print) {
 			LOG.info("Printing is disabled.");
 			return;
 		}
-		if(reconvertForPrintNecesarry()) {
-				LOG.fine("Begin converting for Printing.");
-		convertToPdf(ConversionTypes.PDFBOX);
-		LOG.fine("End converting for Printing.");		
-		LOG.fine("Begin printing.");
-		printLastDocument();
-		LOG.info("File printed.");
-		
+		if (reconvertForPrintNecesarry()) {
+			LOG.fine("Begin converting for Printing.");
+			convertToPdf(ConversionTypes.PDFBOX);
+			LOG.fine("End converting for Printing.");
+			LOG.fine("Begin printing.");
+			printLastDocument();
+			LOG.info("File printed.");
+
 		}
 	}
 
@@ -133,7 +133,8 @@ public class Main {
 			LOG.warning("Can not print file. Message: " + e.getMessage());
 			return;
 		} catch (IOException e) {
-			LOG.warning("No file for printing found. Message: " + e.getMessage());
+			LOG.warning("No file for printing found. Message: "
+					+ e.getMessage());
 			return;
 		}
 	}
@@ -147,12 +148,12 @@ public class Main {
 		LOG.fine("Begin append to pdf.");
 		String allPdf = Configuration.getAllFile();
 		String lastPdf = Configuration.getLastFile();
-		
-		if (!new File(lastPdf).exists()){
+
+		if (!new File(lastPdf).exists()) {
 			LOG.warning("No pdf for merging found. Cancel merging.");
 			return;
 		}
-		
+
 		PDFMergerUtility mergePdf = new PDFMergerUtility();
 		mergePdf.addSource(allPdf);
 		mergePdf.addSource(lastPdf);
@@ -165,7 +166,7 @@ public class Main {
 		}
 		LOG.info("Appended to pdf.");
 	}
-	
+
 	private void save() {
 		if (success) {
 			LOG.fine("Saving.");
@@ -182,7 +183,7 @@ public class Main {
 		}
 		LOG.info("Cleaned up.");
 	}
-	
+
 	public static void main(String[] args) {
 		new Main().process();
 	}
