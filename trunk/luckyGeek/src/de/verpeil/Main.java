@@ -106,6 +106,13 @@ public class Main {
 			LOG.info("Printing is disabled.");
 			return;
 		}
+		LOG.fine("Begin converting.");
+		ConversionTypes type = ConversionTypes.PDFBOX;
+		Converter converter = type.createConverter();
+		converter.convert(lastImage);
+		LOG.fine("End converting image to PDF.");
+		
+		
 		LOG.fine("Begin printing.");
 		printLastDocument();
 		LOG.info("File printed.");
