@@ -63,9 +63,9 @@ public class Main {
 			LOG.info("New image detected. Begin process.");
 			storeToFile();
 			convert();
-			print();
 			appendToPDF();
 			save();
+			print();
 			cleanUp();
 			LOG.info("Finished processing new image.");
 		} else {
@@ -103,12 +103,19 @@ public class Main {
 			LOG.info("Printing is disabled.");
 			return;
 		}
-		LOG.fine("Begin converting for Printing.");
+		if(reconvertForPrintNecesarry()) {
+				LOG.fine("Begin converting for Printing.");
 		convertToPdf(ConversionTypes.PDFBOX);
 		LOG.fine("End converting for Printing.");		
 		LOG.fine("Begin printing.");
 		printLastDocument();
 		LOG.info("File printed.");
+		
+		}
+	}
+
+	private boolean reconvertForPrintNecesarry() {
+		return ConversionTypes.PDFBOX.equals(Configuration.getConversionType());
 	}
 
 	private void convertToPdf(ConversionTypes type) {
