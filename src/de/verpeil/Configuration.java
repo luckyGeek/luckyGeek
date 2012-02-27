@@ -91,5 +91,9 @@ class Configuration {
 	
 	static boolean isMergeAllowed() {
 		return Boolean.valueOf(PROPERTIES.getProperty("file.all.merge", "false")).booleanValue();
+	}	
+	
+	static boolean isOnlyJpegDownload() {
+		return Boolean.valueOf(PROPERTIES.getProperty("file.jpeg.only", "false")).booleanValue();
 	}
 }

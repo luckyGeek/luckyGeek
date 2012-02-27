@@ -51,6 +51,7 @@ public class Main {
 	private final Memory memory = new Memory();
 	private final boolean merge = Configuration.isMergeAllowed();
 	private final boolean print = Configuration.isSilentPrintAllowed();
+	private final boolean fullProcedure = !Configuration.isOnlyJpegDownload();
 
 	private volatile File lastImage = new File(Configuration.getLastImage());
 	private volatile boolean success = false;
@@ -62,10 +63,12 @@ public class Main {
 		if (isNewImage()) {
 			LOG.info("New image detected. Begin process.");
 			storeToFile();
-			convert();
-			appendToPDF();
-			save();
-			print();
+			if (fullProcedure) {
+				convert();
+				appendToPDF();
+				save();
+				print();
+			}
 			cleanUp();
 			LOG.info("Finished processing new image.");
 		} else {
