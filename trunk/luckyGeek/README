@@ -33,6 +33,9 @@ Configuration
 
 Open file conf/conf.properties.
 
+file.jpeg.only = false
+Download JPEG only?
+
 file.last = last.pdf
 Name of converted image as pdf.
 
