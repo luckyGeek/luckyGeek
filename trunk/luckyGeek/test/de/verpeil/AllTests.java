@@ -44,6 +44,7 @@ import org.junit.runners.Suite.SuiteClasses;
 	JMagickConverterTest.class,
 	PdfBoxConverterTest.class,
 	ConversionTypesTest.class,
+	PdfPrinterTest.class,
 	MainTest.class
 })
 public class AllTests {

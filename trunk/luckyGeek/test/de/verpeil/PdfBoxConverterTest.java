@@ -43,7 +43,7 @@ public class PdfBoxConverterTest {
 	@Test
 	public void testPdfBoxConverter() {
 		final PdfBoxConverter converter = new PdfBoxConverter();
-		final boolean result = converter.convert(new File(Configuration.getLastImage()));
+		final boolean result = converter.convert(new File(Configuration.getLastImageName()));
 		assertTrue(result);
 	}
 }

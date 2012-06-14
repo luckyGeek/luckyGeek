@@ -49,13 +49,13 @@ public class MainTest {
 		main.extractImageUrl();
 		main.storeToFile();
 		
-		final File allPdf = new File(Configuration.getAllFile());
+		final File allPdf = new File(Configuration.getAllFileName());
 		assertFile(allPdf);
 		
-		final File currentImage = new File(Configuration.getLastImage());
+		final File currentImage = new File(Configuration.getLastImageName());
 		assertFile(currentImage);
 		
-		final File lastPdf = new File(Configuration.getLastFile());
+		final File lastPdf = new File(Configuration.getLastFileName());
 		assertFile(lastPdf);
 	}
 	

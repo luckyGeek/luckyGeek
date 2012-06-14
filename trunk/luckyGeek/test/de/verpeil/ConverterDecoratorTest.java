@@ -47,7 +47,7 @@ public class ConverterDecoratorTest {
 	public void testDecoratorCatchesException() {
 		final ConverterDecorator decorator = new ConverterDecorator(null);
 		assertNull(decorator.getConverter());
-		assertFalse(decorator.convert(new File(Configuration.getLastImage())));
+		assertFalse(decorator.convert(new File(Configuration.getLastImageName())));
 	}
 	
 	@Test

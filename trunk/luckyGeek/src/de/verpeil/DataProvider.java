@@ -31,53 +31,52 @@
 package de.verpeil;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.logging.Logger;
 
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.Namespace;
-import org.jdom.input.SAXBuilder;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
+
 
 /**
  * Downloads feed and extracts url. 
  */
 class DataProvider {
 	private static final Logger LOG = Logger.getLogger(DataProvider.class.getCanonicalName());
-	private static final String FIRST_ENTRY = "entry";
-	private static final String CONTENT = "content";
-	
-	String extractImageUrl(File xmlFile) {
-		if (xmlFile == null || !xmlFile.isFile() || !xmlFile.getName().endsWith(".xml")) {
-			LOG.warning("Invalid file detected. Retrun default");
-			return "";
-		}
-		
-		Document doc = parseXml(xmlFile);
-		if (doc == null) {
-			LOG.warning("Invalid document. Returning default");
-			return "";
-		}
-		
-		String result = "";
-		Element atom = doc.getRootElement();
-		Namespace ns = atom.getNamespace();
+
+	String extractImageUrl(File file) {
+		LOG.info("Start evaluate.");
+		String value = "";
 		try {
-			String content = atom.getChild(FIRST_ENTRY, ns).getChild(CONTENT, ns)
-					.getValue();
-			result = content.split("href=")[1].split("\"")[1];
-		} catch (Exception e) {
-			LOG.severe("Can not extract from xml: " + e.getMessage());
+			DocumentBuilderFactory domFactory = DocumentBuilderFactory
+					.newInstance();
+			//				domFactory.setNamespaceAware(true);
+			DocumentBuilder builder = domFactory.newDocumentBuilder();
+			Document doc = builder.parse(file);
+			XPath xpath = XPathFactory.newInstance().newXPath();
+			//				xpath.setNamespaceContext(new FeedburnerNamespaceContext());
+			XPathExpression expr = xpath.compile(Configuration.getXpath());
+			Object result = expr.evaluate(doc, XPathConstants.STRING);
+			value = (String) result;
+		} catch (ParserConfigurationException e) {
+			LOG.severe(String.format("Can not parse %s. Message: %s.", file.getAbsoluteFile(), e.getLocalizedMessage()));
+		} catch (SAXException e) {
+			LOG.severe(String.format("Can not parse %s. Message: %s.", file.getAbsoluteFile(), e.getLocalizedMessage()));
+		} catch (IOException e) {
+			LOG.severe(String.format("Error with file %s. Message: %s.", file.getAbsoluteFile(), e.getLocalizedMessage()));
+		} catch (XPathExpressionException e) {
+			LOG.severe(String.format("Invalid XPath-expression '%s'. Message: %s.", Configuration.getXpath(), e.getLocalizedMessage()));
 		}
-		return result;
-	}
-	
-	private Document parseXml(File file) {
-		Document result = null;
-		try {
-			result = new SAXBuilder().build(file);
-		} catch (Exception e) {
-			LOG.severe("Can not parse xml: " + e.getMessage());
-		}
-		return result;
+		LOG.info(String.format("End evaluate '%s'.", value));
+		return value;
 	}
 }

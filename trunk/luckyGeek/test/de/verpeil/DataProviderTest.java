@@ -51,10 +51,14 @@ public class DataProviderTest {
 		provider = new DataProvider();
 		assertNotNull(provider);
 	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testExtractImageUrlRaisesException() {
+		assertEquals("", provider.extractImageUrl(null));
+	}
 
 	@Test
 	public void testExtractImageUrl() {
-		assertEquals("", provider.extractImageUrl(null));
 		assertEquals("", provider.extractImageUrl(new File(".")));
 		assertEquals("", provider.extractImageUrl(new File("testres/not-an-xml.txt")));
 		assertEquals("", provider.extractImageUrl(new File("testres/empty-xml.xml")));
