@@ -43,7 +43,7 @@ public class ImagemagickConverterTest {
 	@Test
 	public void testImagemagickConverter() {
 		final ImagemagickConverter converter = new ImagemagickConverter();
-		final boolean result = converter.convert(new File(Configuration.getLastImage()));
+		final boolean result = converter.convert(new File(Configuration.getLastImageName()));
 		assertTrue(result);
 	}
 }

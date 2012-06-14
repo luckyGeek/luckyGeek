@@ -30,6 +30,7 @@
 
 package de.verpeil;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
@@ -65,16 +66,28 @@ class Configuration {
 		return PROPERTIES.getProperty("download.url");
 	}
 
-	static String getAllFile() {
+	static String getAllFileName() {
 		return PROPERTIES.getProperty("file.all");
 	}
-
-	static String getLastImage() {
-		return PROPERTIES.getProperty("file.last.image");
+	
+	static File getAllFile() {
+		return new File(getAllFileName());
 	}
 
-	static String getLastFile() {
+	static String getLastImageName() {
+		return PROPERTIES.getProperty("file.last.image");
+	}
+	
+	static File getLastImage() {
+		return new File(getLastImageName());
+	}
+
+	static String getLastFileName() {
 		return PROPERTIES.getProperty("file.last");
+	}
+	
+	static File getLastFile() {
+		return new File(getLastFileName());
 	}
 	
 	static String getTempXmlName() {
@@ -95,5 +108,9 @@ class Configuration {
 	
 	static boolean isOnlyJpegDownload() {
 		return Boolean.valueOf(PROPERTIES.getProperty("file.jpeg.only", "false")).booleanValue();
+	}
+	
+	static String getXpath() {
+		return PROPERTIES.getProperty("xml.temp.xpath");
 	}
 }

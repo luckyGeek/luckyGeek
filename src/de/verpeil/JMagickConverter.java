@@ -49,7 +49,7 @@ class JMagickConverter implements Converter {
 		try {
 			ImageInfo imageInfo = new ImageInfo(imageFile.getAbsolutePath());
 			originalImage = new MagickImage(imageInfo);
-			originalImage.setFileName(Configuration.getLastFile());
+			originalImage.setFileName(Configuration.getLastFileName());
 			// fit for A4
 			originalImage.cropImage(new Rectangle(0,0,960,720));
 			

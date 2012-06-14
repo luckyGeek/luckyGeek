@@ -61,7 +61,7 @@
 		<mkdir dir="${dest.dir}" />
 
 		<pathconvert property="mf.classpath" pathsep=" " refid="classpath">
-			<flattenmapper/>
+			<flattenmapper from="${lib.dir}" to="${ant.project.name}_${lib.dir}"/>
 		</pathconvert>
 
 		<tstamp />
@@ -79,6 +79,7 @@
 			<zipfileset dir="${buildxml.home}">
 				<include name="${conf.dir}/*"/>
 				<include name="${log.dir}"/>
+				<include name="${lib.dir}/"/>
 			</zipfileset>
 		</jar>
 	</target>

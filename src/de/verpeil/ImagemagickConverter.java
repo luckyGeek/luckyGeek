@@ -50,7 +50,7 @@ class ImagemagickConverter implements Converter {
 			// create the operation, add images and operators/options
 			IMOperation op = new IMOperation();
 			op.addImage(imageFile.getAbsolutePath());
-			op.addImage(Configuration.getLastFile());
+			op.addImage(Configuration.getLastFileName());
 
 			cmd.run(op);
 			result = true;

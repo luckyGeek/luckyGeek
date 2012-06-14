@@ -85,7 +85,7 @@ class PdfBoxConverter implements Converter {
 			contentStream = new PDPageContentStream(doc, page);
 			contentStream.drawXObject(ximage, 0, 0, rectangle.getWidth(), rectangle.getHeight());
 			contentStream.close();
-			doc.save(Configuration.getLastFile());
+			doc.save(Configuration.getLastFileName());
 			result = true;
 		} catch (Exception e) {
 			LOG.severe("Can not transform image to pdf: " + e.getMessage());

@@ -36,7 +36,6 @@ import java.util.Date;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFMergerUtility;
 
 /**
@@ -46,14 +45,14 @@ public class Main {
 	private static final Logger LOG = Logger.getLogger(Main.class
 			.getCanonicalName());
 
-	private final FileDownloader fd = new FileDownloader();
-	private final DataProvider dp = new DataProvider();
+	private final FileDownloader fileDownloader = new FileDownloader();
+	private final DataProvider dataProvider = new DataProvider();
 	private final Memory memory = new Memory();
 	private final boolean merge = Configuration.isMergeAllowed();
 	private final boolean print = Configuration.isSilentPrintAllowed();
 	private final boolean fullProcedure = !Configuration.isOnlyJpegDownload();
 
-	private volatile File lastImage = new File(Configuration.getLastImage());
+	private volatile File lastImage = Configuration.getLastImage();
 	private volatile boolean success = false;
 	private volatile String imageUrl = "";
 
@@ -79,9 +78,9 @@ public class Main {
 
 	void extractImageUrl() {
 		LOG.fine("Begin: extract image url.");
-		File xml = fd.download(Configuration.getDownloadUrl(),
+		File xml = fileDownloader.download(Configuration.getDownloadUrl(),
 				Configuration.getTempXmlName());
-		imageUrl = dp.extractImageUrl(xml);
+		imageUrl = dataProvider.extractImageUrl(xml);
 		FileUtils.deleteQuietly(xml);
 		LOG.info("Url extracted: " + imageUrl);
 	}
@@ -92,7 +91,7 @@ public class Main {
 
 	void storeToFile() {
 		LOG.fine("Begin download.");
-		lastImage = fd.download(imageUrl, Configuration.getLastImage());
+		lastImage = fileDownloader.download(imageUrl, Configuration.getLastImageName());
 		LOG.info("End downloading from url.");
 	}
 
@@ -132,9 +131,7 @@ public class Main {
 
 	private void printLastDocument() {
 		try {
-			PDDocument printMe = PDDocument.load(Configuration.getLastFile());
-			printMe.silentPrint();
-			printMe.close();
+			new PdfPrinter().print(Configuration.getLastFile());
 		} catch (PrinterException e) {
 			LOG.warning("Can not print file. Message: " + e.getMessage());
 			return;
@@ -152,10 +149,10 @@ public class Main {
 			return;
 		}
 		LOG.fine("Begin append to pdf.");
-		String allPdf = Configuration.getAllFile();
-		String lastPdf = Configuration.getLastFile();
+		String allPdf = Configuration.getAllFileName();
+		File lastPdf = Configuration.getLastFile();
 
-		if (!new File(lastPdf).exists()) {
+		if (!lastPdf.exists()) {
 			LOG.warning("No pdf for merging found. Cancel merging.");
 			return;
 		}
@@ -185,7 +182,7 @@ public class Main {
 	private void cleanUp() {
 		LOG.fine("Cleaning up.");
 		if (merge) {
-			FileUtils.deleteQuietly(new File(Configuration.getLastFile()));
+			FileUtils.deleteQuietly(new File(Configuration.getLastFileName()));
 		}
 		LOG.info("Cleaned up.");
 	}

@@ -42,14 +42,16 @@ public class ConfigurationTest {
 
 	@Test
 	public void testConfiguration() {
-		assertEquals(8, Configuration.getPropertiesCount());
+		assertEquals(10, Configuration.getPropertiesCount());
 		assertEquals("http://geekandpoke.typepad.com/geekandpoke/atom.xml",	Configuration.getDownloadUrl());
-		assertEquals("all.pdf", Configuration.getAllFile());
-		assertEquals("current.jpg", Configuration.getLastImage());
-		assertEquals("last.pdf", Configuration.getLastFile());
+		assertEquals("all.pdf", Configuration.getAllFileName());
+		assertEquals("current.jpg", Configuration.getLastImageName());
+		assertEquals("last.pdf", Configuration.getLastFileName());
 		assertEquals("atom.xml", Configuration.getTempXmlName());
 		assertEquals(ConversionTypes.PDFBOX, Configuration.getConversionType());
 		assertTrue(Configuration.isMergeAllowed());
 		assertFalse(Configuration.isSilentPrintAllowed());
+		assertFalse(Configuration.isOnlyJpegDownload());
+		assertEquals("substring-before(substring-after(//content[@type='html'][1], 'href=\"'), '\">')", Configuration.getXpath());
 	}
 }
