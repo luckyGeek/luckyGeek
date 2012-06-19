@@ -29,10 +29,13 @@
  */
 package de.verpeil;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.logging.Logger;
+
+import javax.imageio.ImageIO;
 
 import org.apache.pdfbox.io.RandomAccessFile;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -57,7 +60,7 @@ class PdfBoxConverter implements Converter {
 
 	@Override
 	public boolean convert(File imageFile) {
-		String image = imageFile.getName();
+		final String image = imageFile.getName().toLowerCase();
 		boolean result = false;
 		PDDocument doc = null;
 		PDPageContentStream contentStream = null;
@@ -68,22 +71,27 @@ class PdfBoxConverter implements Converter {
 			doc.addPage(page);
 
 			PDXObjectImage ximage = null;
-			if (image.toLowerCase().endsWith(".jpg")) {
+			if (image.endsWith(".jpg")) {
 				ximage = new PDJpeg(doc, new FileInputStream(image));
-			} else if (image.toLowerCase().endsWith(".tif")
-					|| image.toLowerCase().endsWith(".tiff")) {
+			} else if (image.endsWith(".tif")
+					|| image.endsWith(".tiff")) {
 				ximage = new PDCcitt(doc, new RandomAccessFile(new File(image),
 						"r"));
+			} else if(image.endsWith(".png")) {
+				// Workaround from http://mail-archives.apache.org/mod_mbox/pdfbox-users/200811.mbox/%3CB47909413E1DC74AB3ED77495F95D65B05EA4CF7@s080a1030.group.rwe.com%3E
+				BufferedImage bufferedImage = ImageIO.read(imageFile);
+				ximage = new PDJpeg(doc, bufferedImage);
 			} else {
 				// BufferedImage awtImage = ImageIO.read( new File( image ) );
 				// ximage = new PDPixelMap(doc, awtImage);
 				throw new IOException("Image type not supported:" + image);
 			}
-
 			// new lines
 			PDRectangle rectangle = page.getMediaBox();
 			contentStream = new PDPageContentStream(doc, page);
-			contentStream.drawXObject(ximage, 0, 0, rectangle.getWidth(), rectangle.getHeight());
+			float width = getWidth(ximage, rectangle);
+			float height = getHeight(ximage, rectangle);
+			contentStream.drawXObject(ximage, rectangle.getLowerLeftX(), rectangle.getUpperRightY() - height, width, height);
 			contentStream.close();
 			doc.save(Configuration.getLastFileName());
 			result = true;
@@ -93,6 +101,14 @@ class PdfBoxConverter implements Converter {
 			closeDocument(doc);
 		}
 		return result;
+	}
+	
+	private float getWidth(final PDXObjectImage image, final PDRectangle rectangle) {
+		return image.getWidth() < rectangle.getWidth() ? image.getWidth() : rectangle.getWidth();
+	}
+	
+	private float getHeight(final PDXObjectImage image, final PDRectangle rectangle) {
+		return image.getHeight() < rectangle.getHeight() ? image.getHeight() : rectangle.getHeight();
 	}
 	
 	private void closeDocument(PDDocument document) {
