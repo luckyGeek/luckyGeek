@@ -53,5 +53,7 @@ public class ConfigurationTest {
 		assertFalse(Configuration.isSilentPrintAllowed());
 		assertFalse(Configuration.isOnlyJpegDownload());
 		assertEquals("substring-before(substring-after(//content[@type='html'][1], 'href=\"'), '\">')", Configuration.getXpath());
+		assertFalse(Configuration.isNamepsaceContextAvailable());
+		assertEquals("", Configuration.getNamespacesAndPrefixes().values().iterator().next());
 	}
 }
