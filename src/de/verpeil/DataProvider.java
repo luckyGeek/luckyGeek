@@ -32,8 +32,12 @@ package de.verpeil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -55,15 +59,18 @@ class DataProvider {
 
 	String extractImageUrl(File file) {
 		LOG.info("Start evaluate.");
+		boolean contextAvailable = Configuration.isNamepsaceContextAvailable();
 		String value = "";
 		try {
 			DocumentBuilderFactory domFactory = DocumentBuilderFactory
 					.newInstance();
-			//				domFactory.setNamespaceAware(true);
+			domFactory.setNamespaceAware(contextAvailable);
 			DocumentBuilder builder = domFactory.newDocumentBuilder();
 			Document doc = builder.parse(file);
 			XPath xpath = XPathFactory.newInstance().newXPath();
-			//				xpath.setNamespaceContext(new FeedburnerNamespaceContext());
+			if (contextAvailable) {
+				xpath.setNamespaceContext(createNamespaceContext());
+			}
 			XPathExpression expr = xpath.compile(Configuration.getXpath());
 			Object result = expr.evaluate(doc, XPathConstants.STRING);
 			value = (String) result;
@@ -78,5 +85,36 @@ class DataProvider {
 		}
 		LOG.info(String.format("End evaluate '%s'.", value));
 		return value;
+	}
+	
+	private NamespaceContext createNamespaceContext() {
+		return new NamespaceContext() {
+			private final Map<String, String> prefixesNamespaces = Configuration.getNamespacesAndPrefixes();
+			
+			@Override
+			public String getNamespaceURI(String prefix) {
+				String result = prefixesNamespaces.get(prefix);
+				return result != null ? result : "";
+			}
+
+			@Override
+		    public String getPrefix(String uri) {
+				if (null == uri) {
+					return "";
+				}
+				Set<Map.Entry<String, String>> entrySet = prefixesNamespaces.entrySet();
+				for(Map.Entry<String, String> entry : entrySet) {
+					if (uri.equals(entry.getValue())) {
+						return entry.getKey();
+					}
+				}
+				return "";
+		    }
+
+			@Override
+		    public Iterator<String> getPrefixes(String uri) {
+		    	return prefixesNamespaces.values().iterator();
+		    }
+		};
 	}
 }
