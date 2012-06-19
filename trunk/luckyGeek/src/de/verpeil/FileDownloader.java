@@ -52,7 +52,7 @@ class FileDownloader {
 		return result;
 	}
 
-	File download(URL url, String dest) {
+	private File download(URL url, String dest) {
 		File result = null;
 		try {
 			result = new File(dest);
