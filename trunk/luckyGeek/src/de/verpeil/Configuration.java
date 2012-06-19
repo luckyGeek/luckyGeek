@@ -33,6 +33,8 @@ package de.verpeil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -68,10 +70,6 @@ class Configuration {
 
 	static String getAllFileName() {
 		return PROPERTIES.getProperty("file.all");
-	}
-	
-	static File getAllFile() {
-		return new File(getAllFileName());
 	}
 
 	static String getLastImageName() {
@@ -112,5 +110,21 @@ class Configuration {
 	
 	static String getXpath() {
 		return PROPERTIES.getProperty("xml.temp.xpath");
+	}
+	
+	static boolean isNamepsaceContextAvailable() {
+		return null != PROPERTIES.get("xml.temp.namespaces")
+				&& null != PROPERTIES.get("xml.temp.namespaces.prefixes");
+	}
+	
+	static Map<String, String> getNamespacesAndPrefixes() {
+		String[] namespaces = PROPERTIES.getProperty("xml.temp.namespaces", "").split("[;]");
+		String[] prefixes = PROPERTIES.getProperty("xml.temp.namespaces.prefixes", "").split("[;]");
+		int size = Math.min(namespaces.length, prefixes.length);
+		Map<String, String> result = new HashMap<String, String>(size);
+		for(int i = 0; i < size; i++) {
+			result.put(prefixes[i], namespaces[i]);
+		}
+		return result;
 	}
 }
