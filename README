@@ -16,7 +16,7 @@ Authors:
 Licenses
 ========
 
-The luckygeek is licensed under GNU GENERAL PUBLIC LICENSE (GPL).
+The luckygeek is licensed under GNU GENERAL PUBLIC LICENSE (GPL) Version 2.
 
 Licenses of third-party are in directory licenses.
 
@@ -34,7 +34,7 @@ Configuration
 Open file conf/conf.properties.
 
 file.jpeg.only = false
-Download JPEG only?
+Download JPEG only? (no conversion to PDF)
 
 file.last = last.pdf
 Name of converted image as pdf.
@@ -54,6 +54,17 @@ Appends file.last to file.all
 xml.temp.name = atom.xml
 Temporary file of downloaded rss.
 
+xml.temp.xpath = substring-before(substring-after(//content[@type='html'][1], 'href="'), '">')
+XPath-expression for extracting URL from xm.temp.name. This is an example for Geek & Poke.
+
+xml.temp.namespaces = 
+This is an optional parameter. It contains semicolon separated without blanks all required namespaces for xml.temp.xpath.
+Count must be equal to xml.temp.namespaces.prefixes.
+
+xml.temp.namespaces.prefixes =
+This is an option parameter. It contains semicolon separated without blanks all required prefixes of all required namespaces for xml.temp.xpath.
+Count must be equal to xml.temp.namespaces.
+
 download.url = http://geekandpoke.typepad.com/geekandpoke/atom.xml
 URL for rss.
 
@@ -61,7 +72,7 @@ type.conversion = pdfbox
 Type of converting image to pdf. Possible values: pdfbox, jmagick, imagemagick.
 
 PDFBox: 
-Transforms jp(e)gs and tiffs to pdf. No Thirdparty required. Simple execute run.bat or run.sh.
+Transforms jp(e)gs, tiffs and pngs to pdf. No Thirdparty required. Simple execute run.bat or run.sh.
 
 JMagick: 
 Native interface for Imagemagick. Requieres imagemagick - should be on your path. Can transform also other image types.
@@ -75,3 +86,4 @@ Problems
 ========
 
 The luckygeek creates log-files during execution. You can find them in logs/luckygeek.log.
+You can change log-level in logging.properties in root-directory.
