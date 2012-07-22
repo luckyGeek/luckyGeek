@@ -12,6 +12,7 @@
 	<property name="conf.dir" value="conf" />
 	<property name="log.dir" value="logs" />
 	<property name="license.dir" value="licenses" />
+	<property name="scripts.dir" value="scripts" />
 	<property name="doc.dir" value="${build.dir}/doc" />
 	<property name="dest.dir" value="${build.dir}/dest" />
 	<property name="release.dir" value="${build.dir}/release" />
@@ -75,16 +76,13 @@
 			<attribute name="Class-Path" value=". ${mf.classpath}" />
 		</manifest>
 
-		<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}" manifest="MANIFEST.MF">
-			<zipfileset dir="${buildxml.home}">
-				<include name="${conf.dir}/*"/>
-				<include name="${log.dir}"/>
-				<include name="${lib.dir}/"/>
-			</zipfileset>
-		</jar>
+		<jar destfile="${jar.dir}/${ant.project.name}.jar" basedir="${classes.dir}" manifest="MANIFEST.MF"/>
 	</target>
 	
 	<target name="javadoc">
+		<tstamp>
+		  <format property="current.year" pattern="yyyy" />
+		</tstamp> 
 		<javadoc packagenames="${package}.*"
 		           sourcepath="${src.dir}"
 		           destdir="${doc.dir}" 
@@ -95,7 +93,7 @@
 			       access="package"
 				   docencoding="UTF-8">
 		    <doctitle><![CDATA[<h1>LuckyGeek</h1>]]></doctitle>
-		    <bottom><![CDATA[<i>luckyGeek 2011.</i>]]></bottom>
+		    <bottom><![CDATA[<i>luckyGeek 2011 - ]]>${current.year}<![CDATA[.</i>]]></bottom>
 		    <group title="Group 1 Packages" packages="${package}.*"/>
 		    <link offline="true" href="http://sourceforge.net/p/luckygeek/home/Home/" packagelistLoc="."/>
 		    <link href="http://sourceforge.net/p/luckygeek/home/Home/"/>
@@ -119,8 +117,9 @@
 				<include name="last.pdf" />
 				<include name="logging.*" />
 				<include name="${conf.dir}/*" />
-				<include name="${license.dir}/*"/>
+				<include name="${license.dir}/**"/>
 				<include name="${log.dir}"/>
+				<include name="${scripts.dir}/**"/>
 			</fileset>
 		</copy>
 	</target>
@@ -131,14 +130,14 @@
 		
 		<zip destfile="${release.dir}/${release-name}-src.zip" basedir="${dest.dir}">
 			<zipfileset dir=".">
-				<include name="${src.dir}/"/>
-				<include name="${doc.dir}/" />
+				<include name="${src.dir}/**"/>
+				<include name="${doc.dir}/**" />
 			</zipfileset>
 		</zip>
 		<tar destfile="${release.dir}/${release-name}-src.tar.bz2" basedir="${dest.dir}" compression="bzip2" >
 			<zipfileset dir=".">
-				<include name="${src.dir}/"/>
-				<include name="${doc.dir}/" />
+				<include name="${src.dir}/**"/>
+				<include name="${doc.dir}/**" />
 			</zipfileset>
 		</tar>
 	</target>
