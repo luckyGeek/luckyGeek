@@ -29,14 +29,11 @@
  */
 package de.verpeil;
 
-import java.awt.print.PrinterException;
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 import java.util.logging.Logger;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.pdfbox.util.PDFMergerUtility;
 
 /**
  * Entry point of lucky geek.
@@ -119,8 +116,7 @@ public class Main {
 	}
 
 	private boolean reconvertForPrintNecesarry() {
-		return !ConversionTypes.PDFBOX
-				.equals(Configuration.getConversionType());
+		return !ConversionTypes.PDFBOX.equals(Configuration.getConversionType());
 	}
 
 	private void convertToPdf(ConversionTypes type) {
@@ -128,18 +124,9 @@ public class Main {
 		converter.convert(lastImage);
 		LOG.fine("End converting image to PDF.");
 	}
-
+	
 	private void printLastDocument() {
-		try {
-			new PdfPrinter().print(Configuration.getLastFile());
-		} catch (PrinterException e) {
-			LOG.warning("Can not print file. Message: " + e.getMessage());
-			return;
-		} catch (IOException e) {
-			LOG.warning("No file for printing found. Message: "
-					+ e.getMessage());
-			return;
-		}
+		new PdfPrinter().print(Configuration.getLastFile());
 	}
 
 	private void appendToPDF() {
@@ -156,17 +143,7 @@ public class Main {
 			LOG.warning("No pdf for merging found. Cancel merging.");
 			return;
 		}
-
-		PDFMergerUtility mergePdf = new PDFMergerUtility();
-		mergePdf.addSource(allPdf);
-		mergePdf.addSource(lastPdf);
-		mergePdf.setDestinationFileName(allPdf);
-		try {
-			mergePdf.mergeDocuments();
-			success = true;
-		} catch (Exception e) {
-			LOG.severe("Can not merge pdfs: " + e.getMessage());
-		}
+		success = new PdfMerger().merge(new File(allPdf), lastPdf);
 		LOG.info("Appended to pdf.");
 	}
 
@@ -182,7 +159,7 @@ public class Main {
 	private void cleanUp() {
 		LOG.fine("Cleaning up.");
 		if (merge) {
-			FileUtils.deleteQuietly(new File(Configuration.getLastFileName()));
+			FileUtils.deleteQuietly(Configuration.getLastFile());
 		}
 		LOG.info("Cleaned up.");
 	}
