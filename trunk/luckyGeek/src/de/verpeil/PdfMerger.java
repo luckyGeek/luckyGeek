@@ -1,5 +1,5 @@
 /**********************************
- * PdfPrinter.java
+ * PdfMerger.java
  * Part of the project "luckyGeek" from
  * ctvoigt (Christian Voigt), chripo2701  2011.
  *
@@ -10,7 +10,7 @@
  * 
  **********************************
  * 
- * Class for printing PDFs.
+ * Merges two PDFs.
  **********************************
  * 
  * This program is free software; you can redistribute it
@@ -29,42 +29,29 @@
  */
 package de.verpeil;
 
-import java.awt.print.PrinterException;
 import java.io.File;
-import java.io.IOException;
 import java.util.logging.Logger;
 
-import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.util.PDFMergerUtility;
 
 /**
- * <b>Wrapper</b> for printing PDFs.
+ * Merges two PDFs.
  */
-class PdfPrinter {
-	private static final Logger LOG = Logger.getLogger(PdfPrinter.class.getCanonicalName());
+class PdfMerger {
+	private static final Logger LOG = Logger.getLogger(PdfMerger.class.getCanonicalName());
 	
-	void print(File file) {
-		if (null == file) {
-			throw new NullPointerException("Invalid file.");
-		}
-		
-		PDDocument printMe = null;
+	boolean merge(File source, File append) {
+		boolean result = false;
+		PDFMergerUtility mergePdf = new PDFMergerUtility();
+		mergePdf.addSource(source);
+		mergePdf.addSource(append);
+		mergePdf.setDestinationFileName(source.getAbsolutePath());
 		try {
-			printMe = PDDocument.load(file);
-			printMe.silentPrint();
-		} catch (PrinterException e) {
-			LOG.warning(String.format("Can not print file. Message: %s.", e.getMessage()));
-		} catch (IOException e) {
-			LOG.warning(String.format("No file for printing found. Message %s.", e.getMessage()));
-		} finally {
-			if (printMe != null) {
-				try {
-					printMe.close();
-				} catch (IOException e) {
-					LOG.warning(String.format(
-							"Error while closing printable document. Message: %s.", e.getMessage()));
-				}
-			}
+			mergePdf.mergeDocuments();
+			result = true;
+		} catch (Exception e) {
+			LOG.severe(String.format("Can not merge pdfs. Message: %s.", e.getMessage()));
 		}
+		return result;
 	}
-
 }
