@@ -45,7 +45,7 @@ import org.apache.commons.io.IOUtils;
  */
 class Configuration {
 	private static final Logger LOG = Logger.getLogger(Configuration.class.getCanonicalName());
-	private static final String CONF_FILE = "./conf/conf.properties";
+	private static final String CONF_FILE = Configuration.getConfigFilePath();
 	private static final Properties PROPERTIES = new Properties();
 
 	static {
@@ -126,5 +126,9 @@ class Configuration {
 			result.put(prefixes[i], namespaces[i]);
 		}
 		return result;
+	}
+	
+	static String getConfigFilePath() {
+		return "./conf/conf.properties";
 	}
 }
