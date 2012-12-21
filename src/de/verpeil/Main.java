@@ -30,6 +30,7 @@
 package de.verpeil;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.logging.Logger;
 
@@ -126,7 +127,11 @@ public class Main {
 	}
 	
 	private void printLastDocument() {
-		new PdfPrinter().print(Configuration.getLastFile());
+		try {
+			new PdfPrinter().print(Configuration.getLastFile());
+		} catch (FileNotFoundException e) {
+			LOG.warning("File for printing not found! Check for previous errors.");
+		}
 	}
 
 	private void appendToPDF() {

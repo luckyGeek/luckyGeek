@@ -31,6 +31,7 @@ package de.verpeil;
 
 import java.awt.print.PrinterException;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Logger;
 
@@ -42,9 +43,12 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 class PdfPrinter {
 	private static final Logger LOG = Logger.getLogger(PdfPrinter.class.getCanonicalName());
 	
-	void print(File file) {
+	void print(File file) throws FileNotFoundException {
 		if (null == file) {
 			throw new NullPointerException("Invalid file.");
+		}
+		if (!file.exists()) {
+			throw new FileNotFoundException("Invalid file.");
 		}
 		
 		PDDocument printMe = null;
