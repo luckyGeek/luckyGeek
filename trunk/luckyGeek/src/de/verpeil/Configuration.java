@@ -41,10 +41,12 @@ import java.util.logging.Logger;
 import org.apache.commons.io.IOUtils;
 
 /**
- * <b>Singleton</b> for read-access of configuration. 
+ * <b>Singleton</b> for read-access of configuration.
  */
 class Configuration {
-	private static final Logger LOG = Logger.getLogger(Configuration.class.getCanonicalName());
+	private static final String CONF_FILENAME = "conf.properties";
+	private static final Logger LOG = Logger.getLogger(Configuration.class
+			.getCanonicalName());
 	private static final String CONF_FILE = Configuration.getConfigFilePath();
 	private static final Properties PROPERTIES = new Properties();
 
@@ -54,12 +56,13 @@ class Configuration {
 			ins = new FileInputStream(CONF_FILE);
 			PROPERTIES.load(ins);
 		} catch (Exception e) {
-			LOG.severe("Error while reading configuration file: " + e.getMessage());
+			LOG.severe("Error while reading configuration file: "
+					+ e.getMessage());
 		} finally {
 			IOUtils.closeQuietly(ins);
 		}
 	}
-	
+
 	static int getPropertiesCount() {
 		return PROPERTIES.size();
 	}
@@ -75,60 +78,83 @@ class Configuration {
 	static String getLastImageName() {
 		return PROPERTIES.getProperty("file.last.image");
 	}
-	
+
 	static File getLastImage() {
 		return new File(getLastImageName());
 	}
 
 	static String getLastFileName() {
-		return PROPERTIES.getProperty("file.last");
+		String lastFile = PROPERTIES.getProperty("file.last");
+		File homePath = new File(System.getProperty("user.home") + "/luckyGeek");
+		if (homePath.exists()) {
+			return new File(homePath.getAbsolutePath() + "/" + lastFile)
+					.getAbsolutePath();
+		} else {
+			return lastFile;
+		}
 	}
-	
+
 	static File getLastFile() {
 		return new File(getLastFileName());
 	}
-	
+
 	static String getTempXmlName() {
 		return PROPERTIES.getProperty("xml.temp.name");
 	}
-	
+
 	static ConversionTypes getConversionType() {
-		return ConversionTypes.parse(PROPERTIES.getProperty("type.conversion", ""));
+		return ConversionTypes.parse(PROPERTIES.getProperty("type.conversion",
+				""));
 	}
-	
+
 	static boolean isSilentPrintAllowed() {
-		return Boolean.valueOf(PROPERTIES.getProperty("file.last.print.silent", "false")).booleanValue();
+		return Boolean.valueOf(
+				PROPERTIES.getProperty("file.last.print.silent", "false"))
+				.booleanValue();
 	}
-	
+
 	static boolean isMergeAllowed() {
-		return Boolean.valueOf(PROPERTIES.getProperty("file.all.merge", "false")).booleanValue();
-	}	
-	
-	static boolean isOnlyJpegDownload() {
-		return Boolean.valueOf(PROPERTIES.getProperty("file.jpeg.only", "false")).booleanValue();
+		return Boolean.valueOf(
+				PROPERTIES.getProperty("file.all.merge", "false"))
+				.booleanValue();
 	}
-	
+
+	static boolean isOnlyJpegDownload() {
+		return Boolean.valueOf(
+				PROPERTIES.getProperty("file.jpeg.only", "false"))
+				.booleanValue();
+	}
+
 	static String getXpath() {
 		return PROPERTIES.getProperty("xml.temp.xpath");
 	}
-	
+
 	static boolean isNamepsaceContextAvailable() {
 		return null != PROPERTIES.get("xml.temp.namespaces")
 				&& null != PROPERTIES.get("xml.temp.namespaces.prefixes");
 	}
-	
+
 	static Map<String, String> getNamespacesAndPrefixes() {
-		String[] namespaces = PROPERTIES.getProperty("xml.temp.namespaces", "").split("[;]");
-		String[] prefixes = PROPERTIES.getProperty("xml.temp.namespaces.prefixes", "").split("[;]");
+		String[] namespaces = PROPERTIES.getProperty("xml.temp.namespaces", "")
+				.split("[;]");
+		String[] prefixes = PROPERTIES.getProperty(
+				"xml.temp.namespaces.prefixes", "").split("[;]");
 		int size = Math.min(namespaces.length, prefixes.length);
 		Map<String, String> result = new HashMap<String, String>(size);
-		for(int i = 0; i < size; i++) {
+		for (int i = 0; i < size; i++) {
 			result.put(prefixes[i], namespaces[i]);
 		}
 		return result;
 	}
-	
+
 	static String getConfigFilePath() {
-		return "./conf/conf.properties";
+		// TODO cleanup
+		File homePath = new File(System.getProperty("user.home") + "/luckyGeek");
+		if (homePath.exists()) {
+			return new File(homePath.getAbsolutePath() + "/" + CONF_FILENAME)
+					.getAbsolutePath();
+		} else {
+			return "./conf/conf.properties";
+		}
 	}
 }

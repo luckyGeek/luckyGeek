@@ -46,7 +46,7 @@ public class ConfigurationTest {
 		assertEquals("http://geekandpoke.typepad.com/geekandpoke/atom.xml",	Configuration.getDownloadUrl());
 		assertEquals("all.pdf", Configuration.getAllFileName());
 		assertEquals("current.jpg", Configuration.getLastImageName());
-		assertEquals("last.pdf", Configuration.getLastFileName());
+		assertTrue(Configuration.getLastFileName().contains("last.pdf"));
 		assertEquals("atom.xml", Configuration.getTempXmlName());
 		assertEquals(ConversionTypes.PDFBOX, Configuration.getConversionType());
 		assertTrue(Configuration.isMergeAllowed());

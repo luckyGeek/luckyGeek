@@ -47,7 +47,7 @@ class Memory {
 	private static final Logger LOG = Logger.getLogger(Memory.class
 			.getCanonicalName());
 	private static final String KEY = "url";
-	private static final File MEMORY_FILE = new File("./conf/memory.properties");
+	private static final File MEMORY_FILE = new File(Memory.getConfigFilePath());
 	private final Properties memory = new Properties();
 
 	Memory() {
@@ -79,6 +79,16 @@ class Memory {
 			LOG.severe("Can not save memory. Message: " + e.getMessage());
 		} finally {
 			IOUtils.closeQuietly(out);
+		}
+	}
+	
+	static String getConfigFilePath() {
+		//TODO cleanup
+		File homePath = new File(System.getProperty("user.home")+"/luckyGeek");
+		if (homePath.exists()) {
+			return new File(homePath.getAbsolutePath()+"/memory.properties").getAbsolutePath();
+		} else {
+			return "./conf/memory.properties";			
 		}
 	}
 }
