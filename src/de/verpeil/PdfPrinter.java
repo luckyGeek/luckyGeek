@@ -51,22 +51,26 @@ class PdfPrinter {
 			throw new FileNotFoundException("Invalid file.");
 		}
 		
-		PDDocument printMe = null;
+		PDDocument printable = null;
 		try {
-			printMe = PDDocument.load(file);
-			printMe.silentPrint();
+			printable = PDDocument.load(file);
+			printable.silentPrint();
 		} catch (PrinterException e) {
 			LOG.warning(String.format("Can not print file. Message: %s.", e.getMessage()));
 		} catch (IOException e) {
 			LOG.warning(String.format("No file for printing found. Message %s.", e.getMessage()));
 		} finally {
-			if (printMe != null) {
-				try {
-					printMe.close();
-				} catch (IOException e) {
-					LOG.warning(String.format(
-							"Error while closing printable document. Message: %s.", e.getMessage()));
-				}
+			closeQuietly(printable);
+		}
+	}
+
+	private void closeQuietly(PDDocument printable) {
+		if (printable != null) {
+			try {
+				printable.close();
+			} catch (IOException e) {
+				LOG.warning(String.format(
+						"Error while closing printable document. Message: %s.", e.getMessage()));
 			}
 		}
 	}
