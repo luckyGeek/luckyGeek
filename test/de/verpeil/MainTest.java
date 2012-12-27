@@ -29,18 +29,36 @@
  */
 package de.verpeil;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
 
 import java.io.File;
 
+import org.apache.commons.io.FileUtils;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
  * Tests <code>{@link Main}</code>.
  */
 public class MainTest {
+	
+	@BeforeClass
+	public static void setUp() {
+		cleanUp();
+	}
+
+	private static void cleanUp() {
+		FileUtils.deleteQuietly(Configuration.getLastImage());
+		FileUtils.deleteQuietly(Configuration.getLastFile());
+	}
+	
+	@AfterClass
+	public static void tearDown() {
+		cleanUp();
+	}
 
 	@Test
 	public void testMain() {
