@@ -30,8 +30,10 @@
 
 package de.verpeil;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -47,6 +49,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.commons.io.IOUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -56,8 +59,20 @@ import org.xml.sax.SAXException;
  */
 class DataProvider {
 	private static final Logger LOG = Logger.getLogger(DataProvider.class.getCanonicalName());
+	
+	String extractImageUrl(String url) {
+		String result = "";
+		try {
+			result = extractImageUrl(URI.create(url).toURL().openStream());
+		} catch (MalformedURLException e) {
+			LOG.severe(String.format("Invalid url '%s'. Message: %s.", url, e.getLocalizedMessage()));
+		} catch (IOException e) {
+			LOG.severe(String.format("Can not open url '%s'. Message: %s.", url, e.getLocalizedMessage()));
+		}
+		return result;
+	}
 
-	String extractImageUrl(File file) {
+	String extractImageUrl(InputStream ins) {
 		LOG.info("Start evaluate.");
 		boolean contextAvailable = Configuration.isNamepsaceContextAvailable();
 		String value = "";
@@ -66,7 +81,7 @@ class DataProvider {
 					.newInstance();
 			domFactory.setNamespaceAware(contextAvailable);
 			DocumentBuilder builder = domFactory.newDocumentBuilder();
-			Document doc = builder.parse(file);
+			Document doc = builder.parse(ins);
 			XPath xpath = XPathFactory.newInstance().newXPath();
 			if (contextAvailable) {
 				xpath.setNamespaceContext(createNamespaceContext());
@@ -75,13 +90,15 @@ class DataProvider {
 			Object result = expr.evaluate(doc, XPathConstants.STRING);
 			value = (String) result;
 		} catch (ParserConfigurationException e) {
-			LOG.severe(String.format("Can not parse %s. Message: %s.", file.getAbsoluteFile(), e.getLocalizedMessage()));
+			LOG.severe("Can not parse stream. Message: " + e.getLocalizedMessage());
 		} catch (SAXException e) {
-			LOG.severe(String.format("Can not parse %s. Message: %s.", file.getAbsoluteFile(), e.getLocalizedMessage()));
+			LOG.severe("Can not parse stream. Message: " +  e.getLocalizedMessage());
 		} catch (IOException e) {
-			LOG.severe(String.format("Error with file %s. Message: %s.", file.getAbsoluteFile(), e.getLocalizedMessage()));
+			LOG.severe("Error with file stream. Message: " + e.getLocalizedMessage());
 		} catch (XPathExpressionException e) {
 			LOG.severe(String.format("Invalid XPath-expression '%s'. Message: %s.", Configuration.getXpath(), e.getLocalizedMessage()));
+		} finally {
+			IOUtils.closeQuietly(ins);
 		}
 		LOG.info(String.format("End evaluate '%s'.", value));
 		return value;

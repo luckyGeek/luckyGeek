@@ -76,10 +76,7 @@ public class Main {
 
 	void extractImageUrl() {
 		LOG.fine("Begin: extract image url.");
-		File xml = fileDownloader.download(Configuration.getDownloadUrl(),
-				Configuration.getTempXmlName());
-		imageUrl = dataProvider.extractImageUrl(xml);
-		FileUtils.deleteQuietly(xml);
+		imageUrl = dataProvider.extractImageUrl(Configuration.getDownloadUrl());
 		LOG.info("Url extracted: " + imageUrl);
 	}
 

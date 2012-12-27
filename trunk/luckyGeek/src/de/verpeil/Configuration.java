@@ -63,10 +63,6 @@ class Configuration {
 		}
 	}
 
-	static int getPropertiesCount() {
-		return PROPERTIES.size();
-	}
-
 	static String getDownloadUrl() {
 		return PROPERTIES.getProperty("download.url");
 	}
@@ -96,10 +92,6 @@ class Configuration {
 
 	static File getLastFile() {
 		return new File(getLastFileName());
-	}
-
-	static String getTempXmlName() {
-		return PROPERTIES.getProperty("xml.temp.name");
 	}
 
 	static ConversionTypes getConversionType() {
