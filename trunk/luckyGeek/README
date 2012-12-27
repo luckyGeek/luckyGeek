@@ -1,22 +1,29 @@
 =============================================
 
-			The luckygeek project
+            The luckyGeek project
 			
 =============================================
 		
 Hosted on sourceforge: https://sourceforge.net/p/luckygeek/home/Home/
 
 Authors:
-	ctvoigt
-	chripo2701
+    ctvoigt
+    chripo2701
 	
-2011
+2011 - 2012
+
+========
+Notes
+========
+
+The luckyGeek-program does not make any changes on an image.
+The copyright of each image belongs to the author of the image. Do not publish merged PDF e. g. all.pdf.
 
 ========
 Licenses
 ========
 
-The luckygeek is licensed under GNU GENERAL PUBLIC LICENSE (GPL) Version 2.
+The luckyGeek is licensed under GNU GENERAL PUBLIC LICENSE (GPL) Version 2.
 
 Licenses of third-party are in directory licenses.
 
@@ -34,7 +41,23 @@ Configuration
 Open file conf/conf.properties.
 
 file.jpeg.only = false
-Download JPEG only? (no conversion to PDF)
+Download image only (no conversion to PDF).
+
+type.conversion = pdfbox
+Type of converting image to pdf. Possible values: pdfbox, jmagick, imagemagick.
+
+  PDFBox: 
+  Transforms jp(e)gs, tiffs and pngs to pdf. No Thirdparty required. Simple execute run.bat or run.sh.
+
+  JMagick: 
+  Native interface for Imagemagick. Requieres imagemagick - should be on your path. Can transform also other image types.
+
+  Imagemagick: 
+  Commandline interface for Imagemagick. Requieres imagemagick. 
+  Set the environment-variable IM4JAVA_TOOLPATH. This variable should contain a list of directories to search for your tools separated by your platform-pathdelemiter (on *NIX typically ":", on Windows ";").
+
+file.all.merge = true
+Appends file.last to file.all
 
 file.last = last.pdf
 Name of converted image as pdf.
@@ -42,17 +65,11 @@ Name of converted image as pdf.
 file.last.print.silent = false
 Print automatically without prompting after conversion.
 
-file.last.image = current.jpg
-The new detected and downloaded image
-
 file.all = all.pdf
 File for merging with file.last.
 
-file.all.merge = true
-Appends file.last to file.all
-
-xml.temp.name = atom.xml
-Temporary file of downloaded rss.
+file.last.image = current.jpg
+The new detected and downloaded image
 
 xml.temp.xpath = substring-before(substring-after(//content[@type='html'][1], 'href="'), '">')
 XPath-expression for extracting URL from xm.temp.name. This is an example for Geek & Poke.
@@ -68,22 +85,29 @@ Count must be equal to xml.temp.namespaces.
 download.url = http://geekandpoke.typepad.com/geekandpoke/atom.xml
 URL for rss.
 
-type.conversion = pdfbox
-Type of converting image to pdf. Possible values: pdfbox, jmagick, imagemagick.
-
-PDFBox: 
-Transforms jp(e)gs, tiffs and pngs to pdf. No Thirdparty required. Simple execute run.bat or run.sh.
-
-JMagick: 
-Native interface for Imagemagick. Requieres imagemagick - should be on your path. Can transform also other image types.
-
-Imagemagick: 
-Commandline interface for Imagemagick. Requieres imagemagick. 
-Set the environment-variable IM4JAVA_TOOLPATH. This variable should contain a list of directories to search for your tools separated by your platform-pathdelemiter (on *NIX typically ":", on Windows ";").
-
 ========
-Problems
+Daily execution
 ========
 
-The luckygeek creates log-files during execution. You can find them in logs/luckygeek.log.
+Under scripts/ you'll find diffent OS-scirpts for daily automated execution of luckyGeek.
+
+To enable automated daily execution for Windows go to scripts/windows and execute create_task.bat.
+To disable automated daily execution for Windows go to scripts/windows and execute remove_task.bat.
+
+========
+Execution erros
+========
+
+The luckyGeek creates log-files during execution. You can find them in logs/luckygeek.log.
 You can change log-level in logging.properties in root-directory.
+
+========
+Troubleshooting
+========
+
+Q: I can't download any image and I have an empty page in my PDF-file.
+A: Allow luckyGeek.jar access to internet through your firewall.
+
+Q: I can't execute any *.bat on Windows Vista, Windows 7 or Windows 8.
+A: Since Windows Vista user account control (UAC) want to protect user for execution of batch-files (*.bat.)
+   To execute these files right-click on a *.bat and select "Run as administrator".
