@@ -50,14 +50,20 @@ class Configuration {
 	private static final String CONF_FILE = Configuration.getConfigFilePath();
 	private static final Properties PROPERTIES = new Properties();
 
-	static {
+	static void load() {
+		load(CONF_FILE);
+	}
+	
+	static void load(String file) {
+		PROPERTIES.clear();
+		
 		InputStream ins = null;
 		try {
-			ins = new FileInputStream(CONF_FILE);
+			ins = new FileInputStream(file);
 			PROPERTIES.load(ins);
 		} catch (Exception e) {
 			LOG.severe("Error while reading configuration file: "
-					+ e.getMessage());
+					+ e.getLocalizedMessage());
 		} finally {
 			IOUtils.closeQuietly(ins);
 		}
@@ -140,7 +146,7 @@ class Configuration {
 	}
 
 	static String getConfigFilePath() {
-		// TODO cleanup
+		// TODO cleanup and use File.separator
 		File homePath = new File(System.getProperty("user.home") + "/luckyGeek");
 		if (homePath.exists()) {
 			return new File(homePath.getAbsolutePath() + "/" + CONF_FILENAME)
