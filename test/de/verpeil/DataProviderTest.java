@@ -29,14 +29,17 @@
  */
 package de.verpeil;
 
-import java.io.File;
-
-import org.junit.Before;
-import org.junit.Test;
-
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertEquals;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+
+import org.apache.commons.io.IOUtils;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Tests <code>{@link DataProvider}</code>. 
@@ -52,17 +55,39 @@ public class DataProviderTest {
 		assertNotNull(provider);
 	}
 	
+	@Test(expected=NullPointerException.class)
+	public void testExtractImageUrlStringRaisesNullPointerException() {
+		assertEquals("", provider.extractImageUrl((String) null));
+	}
+	
 	@Test(expected=IllegalArgumentException.class)
-	public void testExtractImageUrlRaisesException() {
-		assertEquals("", provider.extractImageUrl(null));
+	public void testExtractImageUrlStringRaisesIllegalArgumentException() {
+		assertEquals("", provider.extractImageUrl("this is not an valid URL"));
 	}
 
+
+	@Test(expected=IllegalArgumentException.class)
+	public void testExtractImageUrlInputStreamRaisesException() {
+		assertEquals("", provider.extractImageUrl((InputStream) null));
+	}
+	
 	@Test
-	public void testExtractImageUrl() {
-		assertEquals("", provider.extractImageUrl(new File(".")));
-		assertEquals("", provider.extractImageUrl(new File("testres/not-an-xml.txt")));
-		assertEquals("", provider.extractImageUrl(new File("testres/empty-xml.xml")));
-		assertEquals("", provider.extractImageUrl(new File("testres/invalid.xml")));
-		assertEquals("http://geekandpoke.typepad.com/.a/6a00d8341d3df553ef015438d0e316970c-pi", provider.extractImageUrl(new File("testres/valid.xml")));
+	public void testExtractImageUrl() throws UnsupportedEncodingException {
+		assertExtractedURL("", ".");
+		assertExtractedURL("", "<html><body></body></html>");
+		assertExtractedURL("http://path/image", "<?xml version=\"1.0\" encoding=\"UTF-8\"?><content type=\"html\">href=\"http://path/image\"&gt;</content>");
+	}
+	
+	private void assertExtractedURL(String expected, String input) throws UnsupportedEncodingException {
+		InputStream ins = null;
+		try {
+			assertEquals(expected, provider.extractImageUrl(createInputSteram(input)));
+		} finally {
+			IOUtils.closeQuietly(ins);
+		}
+	}
+	
+	private InputStream createInputSteram(String string) throws UnsupportedEncodingException {
+		return new ByteArrayInputStream(string.getBytes("UTF-8"));
 	}
 }
