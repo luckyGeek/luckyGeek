@@ -42,12 +42,10 @@ public class ConfigurationTest {
 
 	@Test
 	public void testConfiguration() {
-		assertEquals(10, Configuration.getPropertiesCount());
 		assertEquals("http://geekandpoke.typepad.com/geekandpoke/atom.xml",	Configuration.getDownloadUrl());
 		assertEquals("all.pdf", Configuration.getAllFileName());
 		assertEquals("current.jpg", Configuration.getLastImageName());
 		assertTrue(Configuration.getLastFileName().contains("last.pdf"));
-		assertEquals("atom.xml", Configuration.getTempXmlName());
 		assertEquals(ConversionTypes.PDFBOX, Configuration.getConversionType());
 		assertTrue(Configuration.isMergeAllowed());
 		assertFalse(Configuration.isSilentPrintAllowed());
