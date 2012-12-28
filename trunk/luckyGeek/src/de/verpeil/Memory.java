@@ -47,13 +47,14 @@ class Memory {
 	private static final Logger LOG = Logger.getLogger(Memory.class
 			.getCanonicalName());
 	private static final String KEY = "url";
-	private static final File MEMORY_FILE = new File(Memory.getConfigFilePath());
+	private static final String MEMORY_FILE = "memory.properties";
+	
 	private final Properties memory = new Properties();
 
 	Memory() {
 		InputStream ins = null;
 		try {
-			ins = new FileInputStream(MEMORY_FILE);
+			ins = new FileInputStream(getMemoryFile());
 			memory.load(ins);
 		} catch (Exception e) {
 			LOG.severe("Can not load memory. Message: " + e.getMessage());
@@ -73,7 +74,7 @@ class Memory {
 	void save() {
 		OutputStream out = null;
 		try {
-			out = new FileOutputStream(MEMORY_FILE);
+			out = new FileOutputStream(getMemoryFile());
 			memory.store(out, "");
 		} catch (Exception e) {
 			LOG.severe("Can not save memory. Message: " + e.getMessage());
@@ -82,13 +83,11 @@ class Memory {
 		}
 	}
 	
-	static String getConfigFilePath() {
-		//TODO cleanup
-		File homePath = new File(System.getProperty("user.home")+"/luckyGeek");
-		if (homePath.exists()) {
-			return new File(homePath.getAbsolutePath()+"/memory.properties").getAbsolutePath();
-		} else {
-			return "./conf/memory.properties";			
+	private File getMemoryFile() {
+		File memory = new File(Configuration.getConfigFilePath(), MEMORY_FILE);
+		if (memory.exists()) {
+			return memory;
 		}
+		return new File("conf", MEMORY_FILE);
 	}
 }

@@ -44,20 +44,18 @@ import org.junit.Test;
  * Tests <code>{@link Main}</code>.
  */
 public class MainTest {
+	private static File allPdf = null;
 	
 	@BeforeClass
 	public static void setUp() {
-		cleanUp();
-	}
-
-	private static void cleanUp() {
-		FileUtils.deleteQuietly(Configuration.getLastImage());
-		FileUtils.deleteQuietly(Configuration.getLastFile());
+		assertTrue(UnittestUtil.setUp());
+		allPdf = UnittestUtil.createAllPdf();
 	}
 	
 	@AfterClass
 	public static void tearDown() {
-		cleanUp();
+		FileUtils.deleteQuietly(allPdf);
+		UnittestUtil.tearDown();
 	}
 
 	@Test
@@ -65,15 +63,14 @@ public class MainTest {
 		final Main main = new Main();
 		assertNotNull(main);
 		main.extractImageUrl();
-		main.storeToFile();
 		
-		final File allPdf = new File(Configuration.getAllFileName());
 		assertFile(allPdf);
 		
-		final File currentImage = new File(Configuration.getLastImageName());
+		final File currentImage = new File(UnittestUtil.getTestResource(Configuration.getLastImageName()).getFile());
 		assertFile(currentImage);
 		
-		final File lastPdf = new File(Configuration.getLastFileName());
+		assertTrue(Configuration.getConversionType().createConverter().convert(currentImage));
+		final File lastPdf = Configuration.getLastFile();
 		assertFile(lastPdf);
 	}
 	

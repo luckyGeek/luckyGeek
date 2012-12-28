@@ -36,17 +36,24 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
+import org.apache.commons.io.FileUtils;
+import org.junit.AfterClass;
 import org.junit.Test;
 
 /**
  * Tests <code>{@link FileDownloader}</code>.
  */
 public class FileDownloaderTest {
+	
+	@AfterClass
+	public static void tearDown() {
+		FileUtils.deleteQuietly(UnittestUtil.getFileForUserHome("atom.xml"));
+	}
 
 	@Test
 	public void testDownloadFile() {
 		final String url = "http://geekandpoke.typepad.com/geekandpoke/atom.xml";
-		final File result = new FileDownloader().download(url, "atom.xml");
+		final File result = new FileDownloader().download(url, UnittestUtil.getFileForUserHome("atom.xml").getAbsolutePath());
 		assertNotNull(result);
 		assertTrue(result.exists());
 		assertTrue(result.isFile());

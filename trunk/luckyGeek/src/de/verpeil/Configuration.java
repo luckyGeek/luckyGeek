@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 /**
@@ -47,16 +48,20 @@ class Configuration {
 	private static final String CONF_FILENAME = "conf.properties";
 	private static final Logger LOG = Logger.getLogger(Configuration.class
 			.getCanonicalName());
-	private static final String CONF_FILE = Configuration.getConfigFilePath();
 	private static final Properties PROPERTIES = new Properties();
 
 	static void load() {
-		load(CONF_FILE);
+		load(getConfigFile());
 	}
 	
 	static void load(String file) {
 		PROPERTIES.clear();
 		
+		File f = new File(file);
+		if (!f.exists()) {
+			LOG.warning("Can not load configuration from file " + file);
+			return;
+		}
 		InputStream ins = null;
 		try {
 			ins = new FileInputStream(file);
@@ -146,13 +151,19 @@ class Configuration {
 	}
 
 	static String getConfigFilePath() {
-		// TODO cleanup and use File.separator
-		File homePath = new File(System.getProperty("user.home") + "/luckyGeek");
+		File homePath = new File(FileUtils.getUserDirectoryPath(), "luckyGeek");
 		if (homePath.exists()) {
-			return new File(homePath.getAbsolutePath() + "/" + CONF_FILENAME)
-					.getAbsolutePath();
-		} else {
-			return "./conf/conf.properties";
+			return homePath.getAbsolutePath();
 		}
+		return new File("conf").getAbsolutePath();
+	}
+	
+	private static String getConfigFile() {
+		String homePath = getConfigFilePath();
+		File config = new File(homePath, CONF_FILENAME);
+		if (config.exists()) {
+			return config.getAbsolutePath();
+		}
+		return new File("conf", CONF_FILENAME).getAbsolutePath();
 	}
 }
