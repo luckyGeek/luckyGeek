@@ -29,10 +29,13 @@
  */
 package de.verpeil;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -40,10 +43,29 @@ import org.junit.Test;
  */ 
 public class PdfBoxConverterTest {
 	
+	@BeforeClass
+	public static void setUp() {
+		assertTrue(UnittestUtil.setUp());
+		UnittestUtil.createAllPdf();
+	}
+	
+	@AfterClass
+	public static void tearDown() {
+		UnittestUtil.tearDown();
+	}
+	
 	@Test
 	public void testPdfBoxConverter() {
+		final File converted = Configuration.getLastFile();
+		assertFalse("Converted image exists.", converted.exists());
+		
+		final File image = new File(UnittestUtil.getTestResource(Configuration.getLastImageName()).getFile());
+		assertTrue("Input image does not exists.", image.exists());
+		
 		final PdfBoxConverter converter = new PdfBoxConverter();
-		final boolean result = converter.convert(new File(Configuration.getLastImageName()));
-		assertTrue(result);
+		assertTrue(converter.convert(image));
+		
+		assertTrue("Converted image is missing.", converted.exists());
+		assertTrue("Converted image is empty.", converted.length() > Long.valueOf(0));
 	}
 }

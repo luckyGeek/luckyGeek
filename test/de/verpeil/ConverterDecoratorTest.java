@@ -36,12 +36,24 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
  * Tests <code>{@link ConverterDecorator}</code>.
  */
 public class ConverterDecoratorTest {
+	
+	@BeforeClass
+	public static void setUp() {
+		assertTrue(UnittestUtil.setUp());
+	}
+	
+	@AfterClass
+	public static void tearDown() {
+		UnittestUtil.tearDown();
+	}
 	
 	@Test
 	public void testDecoratorCatchesException() {

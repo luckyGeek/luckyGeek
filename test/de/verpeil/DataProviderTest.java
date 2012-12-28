@@ -32,13 +32,16 @@ package de.verpeil;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -46,6 +49,16 @@ import org.junit.Test;
  */
 public class DataProviderTest {
 	private DataProvider provider = null;
+	
+	@BeforeClass
+	public static void setUp() {
+		assertTrue(UnittestUtil.setUp());
+	}
+	
+	@AfterClass
+	public static void tearDown() {
+		UnittestUtil.tearDown();
+	}
 	
 	@Before
 	public void before() {
