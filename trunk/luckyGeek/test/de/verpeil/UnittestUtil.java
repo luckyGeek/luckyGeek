@@ -73,7 +73,11 @@ class UnittestUtil {
 	}
 	
 	static URL getTestResource(String name) {
-		return UnittestUtil.class.getResource("testdata/" + name);
+		URL result = UnittestUtil.class.getResource("/" + name);
+		if (result == null) {
+			result = UnittestUtil.class.getResource("testdata/" + name);
+		}
+		return result;
 	}
 	
 	static File getFileForUserHome(File file) {
