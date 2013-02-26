@@ -86,6 +86,7 @@ class Memory {
 	private File getMemoryFile() {
 		String pathContainingMemoryFile = Configuration.getMemoryFilePath();
 		File memory = new File(pathContainingMemoryFile, MEMORY_FILE);
+		LOG.info("Used memeory file: " + memory);
 		if (memory.exists()) {
 			return memory;
 		}

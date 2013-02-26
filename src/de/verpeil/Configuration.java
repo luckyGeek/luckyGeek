@@ -169,11 +169,11 @@ class Configuration {
 	}
 
 	static String getConfigFilePath() {
-		File homePath = new File(FileUtils.getUserDirectoryPath(),
-				LOCAL_CONFIG_FOLDER);
+		File homePath = new File(FileUtils.getUserDirectoryPath() + "/"
+				+ LOCAL_CONFIG_FOLDER);
 		if (homePath.exists()) {
 			IS_LOCAL_FOLDER = true;
-			return homePath.getAbsolutePath();
+			return homePath.getAbsolutePath() + "/" + CONF_FILENAME;
 		}
 
 		File globalConfig = new File(UNIX_GLOBAL_CONFIG);
@@ -181,20 +181,25 @@ class Configuration {
 			return globalConfig.getAbsolutePath();
 		}
 
-		return new File(CONF_FILENAME).getAbsolutePath();
+		return new File("conf/" + CONF_FILENAME).getAbsolutePath();
 	}
 
 	private static String getConfigFile() throws Exception {
-		String homePath = getConfigFilePath();
-		File config = new File(homePath);
+		String configPath = getConfigFilePath();
+		File config = new File(configPath);
 		if (config.exists()) {
+			LOG.info("Used cinfig file: " + config);
 			return config.getAbsolutePath();
 		}
-		throw new Exception("Config file does not exist!");
+		throw new Exception("Config file '" + configPath + "' does not exist!");
 	}
 
 	public static String getMemoryFilePath() {
 		String propertyString = PROPERTIES.getProperty("file.memory");
+		if (propertyString.equals(".") && IS_LOCAL_FOLDER) {
+			return new File(FileUtils.getUserDirectoryPath() + "/"
+					+ LOCAL_CONFIG_FOLDER).getAbsolutePath();
+		}
 		return appendPrefixForLocalFolders(propertyString);
 	}
 }
