@@ -45,18 +45,26 @@ import org.apache.commons.io.IOUtils;
  * <b>Singleton</b> for read-access of configuration.
  */
 class Configuration {
+	private static final String LOCAL_CONFIG_FOLDER = "luckyGeek";
+	private static final String UNIX_GLOBAL_CONFIG = "/etc/luckyGeek.conf";
 	private static final String CONF_FILENAME = "conf.properties";
+	private static boolean IS_LOCAL_FOLDER = false;
 	private static final Logger LOG = Logger.getLogger(Configuration.class
 			.getCanonicalName());
 	private static final Properties PROPERTIES = new Properties();
 
 	static void load() {
-		load(getConfigFile());
+		try {
+			load(getConfigFile());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
-	
+
 	static void load(String file) {
 		PROPERTIES.clear();
-		
+
 		File f = new File(file);
 		if (!f.exists()) {
 			LOG.warning("Can not load configuration from file " + file);
@@ -79,11 +87,27 @@ class Configuration {
 	}
 
 	static String getAllFileName() {
-		return PROPERTIES.getProperty("file.all");
+		String propertyString = PROPERTIES.getProperty("file.all");
+		return appendPrefixForLocalFolders(propertyString);
+	}
+
+	private static String appendPrefixForLocalFolders(String propertyString) {
+		if (isLocalFolderAndNotAbsolutePath(propertyString)) {
+			return FileUtils.getUserDirectoryPath() + "/" + LOCAL_CONFIG_FOLDER
+					+ "/" + propertyString;
+		}
+		return propertyString;
+	}
+
+	private static boolean isLocalFolderAndNotAbsolutePath(String propertyString) {
+		return IS_LOCAL_FOLDER
+				&& !(propertyString.contains(":") || propertyString
+						.startsWith("/"));
 	}
 
 	static String getLastImageName() {
-		return PROPERTIES.getProperty("file.last.image");
+		String propertyString = PROPERTIES.getProperty("file.last.image");
+		return appendPrefixForLocalFolders(propertyString);
 	}
 
 	static File getLastImage() {
@@ -92,13 +116,7 @@ class Configuration {
 
 	static String getLastFileName() {
 		String lastFile = PROPERTIES.getProperty("file.last");
-		File homePath = new File(System.getProperty("user.home") + "/luckyGeek");
-		if (homePath.exists()) {
-			return new File(homePath.getAbsolutePath() + "/" + lastFile)
-					.getAbsolutePath();
-		} else {
-			return lastFile;
-		}
+		return appendPrefixForLocalFolders(lastFile);
 	}
 
 	static File getLastFile() {
@@ -151,19 +169,32 @@ class Configuration {
 	}
 
 	static String getConfigFilePath() {
-		File homePath = new File(FileUtils.getUserDirectoryPath(), "luckyGeek");
+		File homePath = new File(FileUtils.getUserDirectoryPath(),
+				LOCAL_CONFIG_FOLDER);
 		if (homePath.exists()) {
+			IS_LOCAL_FOLDER = true;
 			return homePath.getAbsolutePath();
 		}
-		return new File("conf").getAbsolutePath();
+
+		File globalConfig = new File(UNIX_GLOBAL_CONFIG);
+		if (globalConfig.exists()) {
+			return globalConfig.getAbsolutePath();
+		}
+
+		return new File(CONF_FILENAME).getAbsolutePath();
 	}
-	
-	private static String getConfigFile() {
+
+	private static String getConfigFile() throws Exception {
 		String homePath = getConfigFilePath();
-		File config = new File(homePath, CONF_FILENAME);
+		File config = new File(homePath);
 		if (config.exists()) {
 			return config.getAbsolutePath();
 		}
-		return new File("conf", CONF_FILENAME).getAbsolutePath();
+		throw new Exception("Config file does not exist!");
+	}
+
+	public static String getMemoryFilePath() {
+		String propertyString = PROPERTIES.getProperty("file.memory");
+		return appendPrefixForLocalFolders(propertyString);
 	}
 }
