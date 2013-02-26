@@ -84,10 +84,11 @@ class Memory {
 	}
 	
 	private File getMemoryFile() {
-		File memory = new File(Configuration.getConfigFilePath(), MEMORY_FILE);
+		String pathContainingMemoryFile = Configuration.getMemoryFilePath();
+		File memory = new File(pathContainingMemoryFile, MEMORY_FILE);
 		if (memory.exists()) {
 			return memory;
 		}
-		return new File("conf", MEMORY_FILE);
+		return new File(pathContainingMemoryFile, MEMORY_FILE);
 	}
 }
