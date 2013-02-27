@@ -88,7 +88,17 @@ class Configuration {
 
 	static String getAllFileName() {
 		String propertyString = PROPERTIES.getProperty("file.all");
-		return appendPrefixForLocalFolders(propertyString);
+		return convertToAbsolutePath(propertyString);
+	}
+
+	private static String convertToAbsolutePath(String propertyString) {
+		propertyString = appendPrefixForLocalFolders(propertyString);
+		propertyString = replaceHomeChar(propertyString);
+		return propertyString;
+	}
+
+	private static String replaceHomeChar(String propertyString) {
+		return propertyString.replace("~", FileUtils.getUserDirectoryPath());
 	}
 
 	private static String appendPrefixForLocalFolders(String propertyString) {
@@ -107,7 +117,7 @@ class Configuration {
 
 	static String getLastImageName() {
 		String propertyString = PROPERTIES.getProperty("file.last.image");
-		return appendPrefixForLocalFolders(propertyString);
+		return convertToAbsolutePath(propertyString);
 	}
 
 	static File getLastImage() {
@@ -116,7 +126,7 @@ class Configuration {
 
 	static String getLastFileName() {
 		String lastFile = PROPERTIES.getProperty("file.last");
-		return appendPrefixForLocalFolders(lastFile);
+		return convertToAbsolutePath(lastFile);
 	}
 
 	static File getLastFile() {
@@ -200,6 +210,6 @@ class Configuration {
 			return new File(FileUtils.getUserDirectoryPath() + "/"
 					+ LOCAL_CONFIG_FOLDER).getAbsolutePath();
 		}
-		return appendPrefixForLocalFolders(propertyString);
+		return convertToAbsolutePath(propertyString);
 	}
 }
