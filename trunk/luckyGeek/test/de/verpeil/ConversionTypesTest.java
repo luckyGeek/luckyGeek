@@ -59,9 +59,6 @@ public class ConversionTypesTest {
 		assertConverter(ConversionTypes.IMAGEMAGICK.createConverter());
 		assertTrue(unwrap(ConversionTypes.IMAGEMAGICK.createConverter()) instanceof ImagemagickConverter);
 		
-		assertConverter(ConversionTypes.JMAGICK.createConverter());
-		assertTrue(unwrap(ConversionTypes.JMAGICK.createConverter()) instanceof JMagickConverter);
-		
 		assertConverter(ConversionTypes.PDFBOX.createConverter());
 		assertTrue(unwrap(ConversionTypes.PDFBOX.createConverter()) instanceof PdfBoxConverter);
 	}
