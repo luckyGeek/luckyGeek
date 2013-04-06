@@ -28,7 +28,7 @@
  * MA 02111-1307, USA.
  */
 
-package de.verpeil;
+package de.verpeil.luckygeek;
 
 import java.io.File;
 import java.io.FileInputStream;

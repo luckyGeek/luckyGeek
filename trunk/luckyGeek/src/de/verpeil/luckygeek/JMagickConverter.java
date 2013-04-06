@@ -1,5 +1,5 @@
 /**********************************
- * PdfMerger.java
+ * JMagickConverter.java
  * Part of the project "luckyGeek" from
  * ctvoigt (Christian Voigt), chripo2701  2011.
  *
@@ -10,7 +10,7 @@
  * 
  **********************************
  * 
- * Merges two PDFs.
+ * Converts an image to a PDF-file using JMagick. Requires imagemagick.
  **********************************
  * 
  * This program is free software; you can redistribute it
@@ -27,30 +27,42 @@
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
  */
-package de.verpeil;
+package de.verpeil.luckygeek;
 
+import java.awt.Rectangle;
 import java.io.File;
 import java.util.logging.Logger;
 
-import org.apache.pdfbox.util.PDFMergerUtility;
+import magick.ImageInfo;
+import magick.MagickImage;
 
 /**
- * Merges two PDFs.
+ * Implementation of <code>{@link Converter}</code>.
+ * @deprecated
  */
-class PdfMerger {
-	private static final Logger LOG = Logger.getLogger(PdfMerger.class.getCanonicalName());
+class JMagickConverter implements Converter {
+	private static final Logger LOG = Logger.getLogger(JMagickConverter.class.getCanonicalName());
 	
-	boolean merge(File source, File append) {
+	@Override
+	public boolean convert(File imageFile) {
 		boolean result = false;
-		PDFMergerUtility mergePdf = new PDFMergerUtility();
-		mergePdf.addSource(source);
-		mergePdf.addSource(append);
-		mergePdf.setDestinationFileName(source.getAbsolutePath());
+		MagickImage originalImage = null;
 		try {
-			mergePdf.mergeDocuments();
+			ImageInfo imageInfo = new ImageInfo(imageFile.getAbsolutePath());
+			originalImage = new MagickImage(imageInfo);
+			originalImage.setFileName(Configuration.getLastFileName());
+			// fit for A4
+			originalImage.cropImage(new Rectangle(0,0,960,720));
+			
+			ImageInfo pdf = new ImageInfo();
+			originalImage.writeImage(pdf);
 			result = true;
 		} catch (Exception e) {
-			LOG.severe(String.format("Can not merge pdfs. Message: %s.", e.getMessage()));
+			LOG.severe(String.format("Can not scale image. Aborting. Message: %s.", e.getMessage()));
+		} finally {
+			if (originalImage != null) {
+				originalImage.destroyImages();
+			}
 		}
 		return result;
 	}

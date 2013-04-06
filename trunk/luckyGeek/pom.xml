@@ -74,7 +74,7 @@
 		<testOutputDirectory>${project.build.directory}/test-classes</testOutputDirectory>
 		<testResources>
 	      <testResource>
-	        <directory>${project.basedir}/test/de/verpeil/testdata</directory>
+	        <directory>${project.basedir}/test/de/verpeil/luckygeek/testdata</directory>
 	      </testResource>
 	    </testResources>
 	    
@@ -150,7 +150,7 @@
 						<index>true</index>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<mainClass>de.verpeil.Main</mainClass>
+							<mainClass>de.verpeil.luckygeek.Main</mainClass>
 						</manifest>
 						<manifestEntries>
 			              <mode>development</mode>

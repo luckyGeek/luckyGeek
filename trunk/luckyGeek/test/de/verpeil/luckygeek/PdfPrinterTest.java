@@ -1,5 +1,5 @@
 /**********************************
- * FileDownloader.java
+ * PdfPrinterTest.java
  * Part of the project "luckyGeek" from
  * ctvoigt (Christian Voigt), chripo2701  2011.
  *
@@ -10,7 +10,7 @@
  * 
  **********************************
  * 
- * Downloads an file from HTTP-Server.
+ * Tests PdfPrinter.java.
  **********************************
  * 
  * This program is free software; you can redistribute it
@@ -27,39 +27,39 @@
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
  */
+package de.verpeil.luckygeek;
 
-package de.verpeil;
+import static org.junit.Assert.assertNotNull;
 
+import java.awt.print.PrinterException;
 import java.io.File;
-import java.net.URL;
-import java.util.logging.Logger;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
-import org.apache.commons.io.FileUtils;
+import org.junit.Before;
+import org.junit.Test;
+
+import de.verpeil.luckygeek.PdfPrinter;
 
 /**
- * Downloads a file from url. 
+ * Tests <code>{@link PdfPrinter}</code>. 
  */
-class FileDownloader {
-	private static final Logger LOG = Logger.getLogger(FileDownloader.class.getCanonicalName());
+public class PdfPrinterTest {
+	private PdfPrinter printer = null;
 	
-	File download(String url, String dest) {
-		File result = null;
-		try {
-			result = download(new URL(url), dest);
-		} catch (Exception e) {
-			LOG.severe(String.format("Can not establish connection to url '%s'. Message: %s.", url, e.getMessage()));
-		}
-		return result;
+	@Before
+	public void before() {
+		printer = new PdfPrinter();
+		assertNotNull(printer);
 	}
-
-	private File download(URL url, String dest) {
-		File result = null;
-		try {
-			result = new File(dest);
-			FileUtils.copyURLToFile(url, result);
-		} catch (Exception e) {
-			LOG.severe(String.format("Can not download file from url '%s'. Message: %s.", url, e.getMessage()));
-		}
-		return result;
+	
+	@Test(expected=NullPointerException.class)
+	public void testRaisesNullPointerException() throws IOException, PrinterException {
+		printer.print(null);
+	}
+	
+	@Test(expected=FileNotFoundException.class)
+	public void testRaisesFileNotFoundException() throws IOException, PrinterException {
+		printer.print(new File("non-existing"));
 	}
 }
