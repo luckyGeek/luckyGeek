@@ -42,8 +42,10 @@ enum ConversionTypes {
 			return new ConverterDecorator(new ImagemagickConverter());
 		}
 	},
+	//TODO: remove in 0.8xx
 	JMAGICK {
 		@Override
+		@Deprecated
 		public Converter createConverter() {
 			return new ConverterDecorator(new JMagickConverter());
 		}
