@@ -37,7 +37,8 @@ import magick.ImageInfo;
 import magick.MagickImage;
 
 /**
- * Implementation of <code>{@link Converter}</code>. 
+ * Implementation of <code>{@link Converter}</code>.
+ * @deprecated
  */
 class JMagickConverter implements Converter {
 	private static final Logger LOG = Logger.getLogger(JMagickConverter.class.getCanonicalName());
