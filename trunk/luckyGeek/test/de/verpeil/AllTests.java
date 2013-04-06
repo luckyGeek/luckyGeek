@@ -41,7 +41,6 @@ import org.junit.runners.Suite.SuiteClasses;
 	DataProviderTest.class,
 	ConverterDecoratorTest.class,
 	ImagemagickConverterTest.class,
-	JMagickConverterTest.class,
 	PdfBoxConverterTest.class,
 	ConversionTypesTest.class,
 	PdfPrinterTest.class,
