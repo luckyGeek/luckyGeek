@@ -1,4 +1,4 @@
-package de.verpeil;
+package de.verpeil.luckygeek;
 
 import java.io.File;
 

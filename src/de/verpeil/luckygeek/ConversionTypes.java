@@ -1,5 +1,5 @@
 /**********************************
- * JMagickConverter.java
+ * ConversionTypes.java
  * Part of the project "luckyGeek" from
  * ctvoigt (Christian Voigt), chripo2701  2011.
  *
@@ -10,7 +10,7 @@
  * 
  **********************************
  * 
- * Converts an image to a PDF-file using JMagick. Requires imagemagick.
+ * Enumeration of all possible image to pdf converts.
  **********************************
  * 
  * This program is free software; you can redistribute it
@@ -27,43 +27,49 @@
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
  */
-package de.verpeil;
+package de.verpeil.luckygeek;
 
-import java.awt.Rectangle;
-import java.io.File;
 import java.util.logging.Logger;
 
-import magick.ImageInfo;
-import magick.MagickImage;
-
 /**
- * Implementation of <code>{@link Converter}</code>.
- * @deprecated
+ * Containes types for conversion.
  */
-class JMagickConverter implements Converter {
-	private static final Logger LOG = Logger.getLogger(JMagickConverter.class.getCanonicalName());
-	
-	@Override
-	public boolean convert(File imageFile) {
-		boolean result = false;
-		MagickImage originalImage = null;
+enum ConversionTypes {
+	PDFBOX, 
+	IMAGEMAGICK {
+		@Override
+		public Converter createConverter() {
+			return new ConverterDecorator(new ImagemagickConverter());
+		}
+	},
+	//TODO: remove in 0.8xx
+	JMAGICK {
+		@Override
+		@Deprecated
+		public Converter createConverter() {
+			return new ConverterDecorator(new JMagickConverter());
+		}
+	};
+
+	private static final Logger LOG = Logger.getLogger(ConversionTypes.class
+			.getCanonicalName());
+
+	static ConversionTypes parse(String value) {
+		ConversionTypes result = PDFBOX;
+		if (value == null || value.isEmpty()) {
+			return result;
+		}
+
 		try {
-			ImageInfo imageInfo = new ImageInfo(imageFile.getAbsolutePath());
-			originalImage = new MagickImage(imageInfo);
-			originalImage.setFileName(Configuration.getLastFileName());
-			// fit for A4
-			originalImage.cropImage(new Rectangle(0,0,960,720));
-			
-			ImageInfo pdf = new ImageInfo();
-			originalImage.writeImage(pdf);
-			result = true;
+			result = ConversionTypes.valueOf(value.toUpperCase());
 		} catch (Exception e) {
-			LOG.severe(String.format("Can not scale image. Aborting. Message: %s.", e.getMessage()));
-		} finally {
-			if (originalImage != null) {
-				originalImage.destroyImages();
-			}
+			LOG.warning(String.format("Can not parse value '%s'. Message: %s.",
+					value, e.getMessage()));
 		}
 		return result;
+	}
+
+	Converter createConverter() {
+		return new ConverterDecorator(new PdfBoxConverter());
 	}
 }

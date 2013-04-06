@@ -1,5 +1,5 @@
 /**********************************
- * ConversionTypes.java
+ * PdfMerger.java
  * Part of the project "luckyGeek" from
  * ctvoigt (Christian Voigt), chripo2701  2011.
  *
@@ -10,7 +10,7 @@
  * 
  **********************************
  * 
- * Enumeration of all possible image to pdf converts.
+ * Merges two PDFs.
  **********************************
  * 
  * This program is free software; you can redistribute it
@@ -27,49 +27,31 @@
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
  */
-package de.verpeil;
+package de.verpeil.luckygeek;
 
+import java.io.File;
 import java.util.logging.Logger;
 
+import org.apache.pdfbox.util.PDFMergerUtility;
+
 /**
- * Containes types for conversion.
+ * Merges two PDFs.
  */
-enum ConversionTypes {
-	PDFBOX, 
-	IMAGEMAGICK {
-		@Override
-		public Converter createConverter() {
-			return new ConverterDecorator(new ImagemagickConverter());
-		}
-	},
-	//TODO: remove in 0.8xx
-	JMAGICK {
-		@Override
-		@Deprecated
-		public Converter createConverter() {
-			return new ConverterDecorator(new JMagickConverter());
-		}
-	};
-
-	private static final Logger LOG = Logger.getLogger(ConversionTypes.class
-			.getCanonicalName());
-
-	static ConversionTypes parse(String value) {
-		ConversionTypes result = PDFBOX;
-		if (value == null || value.isEmpty()) {
-			return result;
-		}
-
+class PdfMerger {
+	private static final Logger LOG = Logger.getLogger(PdfMerger.class.getCanonicalName());
+	
+	boolean merge(File source, File append) {
+		boolean result = false;
+		PDFMergerUtility mergePdf = new PDFMergerUtility();
+		mergePdf.addSource(source);
+		mergePdf.addSource(append);
+		mergePdf.setDestinationFileName(source.getAbsolutePath());
 		try {
-			result = ConversionTypes.valueOf(value.toUpperCase());
+			mergePdf.mergeDocuments();
+			result = true;
 		} catch (Exception e) {
-			LOG.warning(String.format("Can not parse value '%s'. Message: %s.",
-					value, e.getMessage()));
+			LOG.severe(String.format("Can not merge pdfs. Message: %s.", e.getMessage()));
 		}
 		return result;
-	}
-
-	Converter createConverter() {
-		return new ConverterDecorator(new PdfBoxConverter());
 	}
 }

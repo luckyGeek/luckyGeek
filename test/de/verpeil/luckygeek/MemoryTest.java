@@ -1,5 +1,5 @@
 /**********************************
- * Converter.java
+ * MemoryTest.java
  * Part of the project "luckyGeek" from
  * ctvoigt (Christian Voigt), chripo2701  2011.
  *
@@ -10,7 +10,7 @@
  * 
  **********************************
  * 
- * Interface for image to pdf conversion.
+ * Test-case for Memory.java.
  **********************************
  * 
  * This program is free software; you can redistribute it
@@ -27,13 +27,23 @@
  * Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  * MA 02111-1307, USA.
  */
-package de.verpeil;
+package de.verpeil.luckygeek;
 
-import java.io.File;
+import static org.junit.Assert.assertNotNull;
+
+import org.junit.Test;
+
+import de.verpeil.luckygeek.Memory;
 
 /**
- * <b>Interface</b> for image conversion.
+ * Tests <code>{@link Memory}</code>.
  */
-interface Converter {
-	boolean convert(File imageFile);
+public class MemoryTest {
+	@Test
+	public void testParseDate() {
+		final Memory memory =  new Memory();
+		assertNotNull(memory);
+		final String url = memory.getUrl();
+		assertNotNull(url);
+	}
 }

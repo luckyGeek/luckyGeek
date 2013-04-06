@@ -18,11 +18,11 @@
 	<property name="release.dir" value="${build.dir}/release" />
 	<property name="report.dir" value="${build.dir}/junitreport" />
 
-	<property name="test-all-class" value="de.verpeil.AllTests" />
+	<property name="test-all-class" value="de.verpeil.luckygeek.AllTests" />
 
-	<property name="package" value="de.verpeil" />
+	<property name="package" value="de.verpeil.luckygeek" />
 	<property name="class-loader" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader" />
-	<property name="main-class" value="de.verpeil.Main" />
+	<property name="main-class" value="de.verpeil.luckygeek.Main" />
 	<property name="manifest.main.class" value="${main-class}" />
 	<property name="manifest.built.by" value="lucky geeks" />
 	<property name="manifest.created.by" value="lucky geeks" />
