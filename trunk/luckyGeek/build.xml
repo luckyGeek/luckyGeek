@@ -17,7 +17,9 @@
 	<property name="dest.dir" value="${build.dir}/dest" />
 	<property name="release.dir" value="${build.dir}/release" />
 	<property name="report.dir" value="${build.dir}/junitreport" />
-
+	<property name="installer.script" value="install.nsi" />
+	<property name="setup.dir" value="${buildxml.home}/../setup" />
+	
 	<property name="test-all-class" value="de.verpeil.luckygeek.AllTests" />
 
 	<property name="package" value="de.verpeil.luckygeek" />
@@ -140,6 +142,8 @@
 				<include name="${doc.dir}/**" />
 			</zipfileset>
 		</tar>
+		
+		<antcall target="buildInstallerOnly" />
 	</target>
 
 	<target name="run" description="executes jar">
@@ -207,5 +211,24 @@
 			<fileset dir="${report.dir}" includes="TEST-*.xml" />
 			<report todir="${report.dir}" />
 		</junitreport>
+	</target>
+	
+	<target name="buildInstallerOnly"  description="Builds exe with NSIS">
+		<copy todir="${dest.dir}">
+		     <fileset dir="${setup.dir}">
+		        <include name="${installer.script}"/>
+		     	<include name="*.ico"/>
+		     	<include name="*.bmp"/>
+		     	<include name="LICENSE"/>
+		    </fileset>
+		</copy>
+        <exec executable="makensis" osfamily="windows" dir="${dest.dir}" >
+            <arg value="${installer.script}"/>
+        </exec>
+		<copy todir="${release.dir}">
+			<fileset dir="${dest.dir}">
+				<include name="*.exe" />
+			</fileset>
+		</copy>
 	</target>
 </project>

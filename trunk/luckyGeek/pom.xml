@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.verpeil</groupId>
 	<artifactId>luckygeek</artifactId>
-	<version>0.411-SNAPSHOT</version>
+	<version>0.710-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>luckygeek</name>
 	<url>http://sourceforge.net/p/luckygeek/home/Home/</url>
@@ -160,6 +160,24 @@
 					</archive>
 				</configuration>
 			</plugin>
+			 <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <executions>
+                  <execution>
+                    <goals>
+                      <goal>exec</goal>
+                    </goals>
+                  </execution>
+                </executions>
+                <configuration>
+                  <executable>"C:/Program Files (x86)/NSIS/makensis.exe"</executable>
+                  <arguments>
+                    <argument>install.nsi</argument>
+                  </arguments>
+                </configuration>
+          </plugin>
 			<!-- Add scoure to jar -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -228,6 +246,39 @@
 			      <goals>deploy assembly:single</goals>
 			    </configuration>
 			 </plugin>
+			 <plugin>
+		        <artifactId>maven-antrun-plugin</artifactId>
+		        <version>1.7</version>
+		        <executions>
+		          <execution>
+		            <phase> install </phase>
+		            <configuration>
+		              <target>
+		
+		                <!--
+		                  Place any Ant task here. You can add anything
+		                  you can add between <target> and </target> in a
+		                  build.xml.
+		                -->
+		                <copy todir="${project.basedir}/target">
+				             <fileset dir="${project.basedir}/../setup">
+				                <include name="*"/>
+				            </fileset>
+				            <fileset dir="${project.basedir}">
+				                <include name="LICENSE" />
+				            </fileset>
+				        </copy>
+						<exec executable="makensis" osfamily="windows" dir="${project.basedir}/target" >
+				            <arg value="install.nsi"/>
+				        </exec>
+		              </target>
+		            </configuration>
+		            <goals>
+		              <goal>run</goal>
+		            </goals>
+		          </execution>
+		        </executions>
+		      </plugin>
 		</plugins>
 	</build>
 	<dependencyManagement>
