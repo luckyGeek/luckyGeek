@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.8.3
+Created-By: lucky geeks
+Built-By: lucky geeks
+Implementation-Version: 0.450-b$Rev: 167 $
+Built-Date: April 6 2013
+Main-Class: de.verpeil.luckygeek.Main
+Class-Path: . commons-io-2.0.1.jar commons-logging-1.1.1.jar fontbox-1
+ .6.0.jar im4java-1.2.0-1.5.jar jmagick.jar pdfbox-1.6.0.jar
+
