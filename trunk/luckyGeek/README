@@ -10,7 +10,7 @@ Authors:
     ctvoigt
     chripo2701
 	
-2011 - 2012
+2011 - 2013
 
 ========
 Notes
@@ -44,23 +44,20 @@ file.jpeg.only = false
 Download image only (no conversion to PDF).
 
 type.conversion = pdfbox
-Type of converting image to pdf. Possible values: pdfbox, jmagick, imagemagick.
+Type of converting image to pdf. Possible values: pdfbox, imagemagick.
 
   PDFBox: 
-  Transforms jp(e)gs, tiffs and pngs to pdf. No Thirdparty required. Simple execute run.bat or run.sh.
-
-  JMagick: 
-  Native interface for Imagemagick. Requieres imagemagick - should be on your path. Can transform also other image types.
+  Transforms JP(E)GS, TIFFs and PNGs to PDF. No third-party required. Simple execute run.bat or run.sh.
 
   Imagemagick: 
-  Commandline interface for Imagemagick. Requieres imagemagick. 
+  Command line interface for Imagemagick. Requieres imagemagick. 
   Set the environment-variable IM4JAVA_TOOLPATH. This variable should contain a list of directories to search for your tools separated by your platform-pathdelemiter (on *NIX typically ":", on Windows ";").
 
 file.all.merge = true
 Appends file.last to file.all
 
 file.last = last.pdf
-Name of converted image as pdf.
+Name of converted image as PDF.
 
 file.last.print.silent = false
 Print automatically without prompting after conversion.
@@ -71,8 +68,11 @@ File for merging with file.last.
 file.last.image = current.jpg
 The new detected and downloaded image
 
+download.url = http://geekandpoke.typepad.com/geekandpoke/atom.xml
+URL for rss.
+
 xml.temp.xpath = substring-before(substring-after(//content[@type='html'][1], 'href="'), '">')
-XPath-expression for extracting URL from xm.temp.name. This is an example for Geek & Poke.
+XPath-expression for extracting URL from file of download.url. This is an example for Geek & Poke.
 
 xml.temp.namespaces = 
 This is an optional parameter. It contains semicolon separated without blanks all required namespaces for xml.temp.xpath.
@@ -82,32 +82,25 @@ xml.temp.namespaces.prefixes =
 This is an option parameter. It contains semicolon separated without blanks all required prefixes of all required namespaces for xml.temp.xpath.
 Count must be equal to xml.temp.namespaces.
 
-download.url = http://geekandpoke.typepad.com/geekandpoke/atom.xml
-URL for rss.
-
-========
+================
 Daily execution
-========
+================
 
-Under scripts/ you'll find diffent OS-scirpts for daily automated execution of luckyGeek.
+Under scripts/ you'll find different OS-scripts for daily automated execution of luckyGeek.
 
 To enable automated daily execution for Windows go to scripts/windows and execute create_task.bat.
 To disable automated daily execution for Windows go to scripts/windows and execute remove_task.bat.
 
-========
-Execution erros
-========
+================
+Execution errors
+================
 
 The luckyGeek creates log-files during execution. You can find them in logs/luckygeek.log.
 You can change log-level in logging.properties in root-directory.
 
-========
+================
 Troubleshooting
-========
+================
 
 Q: I can't download any image and I have an empty page in my PDF-file.
-A: Allow luckyGeek.jar access to internet through your firewall.
-
-Q: I can't execute any *.bat on Windows Vista, Windows 7 or Windows 8.
-A: Since Windows Vista user account control (UAC) want to protect user for execution of batch-files (*.bat.)
-   To execute these files right-click on a *.bat and select "Run as administrator".
+A: Allow luckyGeek.jar access to internet through your fire-wall.
