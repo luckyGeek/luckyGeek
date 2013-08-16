@@ -1,5 +1,5 @@
 /**********************************
- * PdfBoxConverterTest.java
+ *PdfBoxConverterTest.java
  * Part of the project "luckyGeek" from
  * ctvoigt (Christian Voigt), chripo2701  2011.
  *
@@ -38,37 +38,34 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import de.verpeil.luckygeek.Configuration;
-import de.verpeil.luckygeek.PdfBoxConverter;
-
 /**
  * Tests <code>{@link PdfBoxConverter}</code>.
  */ 
 public class PdfBoxConverterTest {
-	
-	@BeforeClass
-	public static void setUp() {
-		assertTrue(UnittestUtil.setUp());
-		UnittestUtil.createAllPdf();
-	}
-	
-	@AfterClass
-	public static void tearDown() {
-		UnittestUtil.tearDown();
-	}
-	
-	@Test
-	public void testPdfBoxConverter() {
-		final File converted = Configuration.getLastFile();
-		assertFalse("Converted image exists.", converted.exists());
-		
-		final File image = new File(UnittestUtil.getTestResource(Configuration.getLastImageName()).getFile());
-		assertTrue("Input image does not exists.", image.exists());
-		
-		final PdfBoxConverter converter = new PdfBoxConverter();
-		assertTrue(converter.convert(image));
-		
-		assertTrue("Converted image is missing.", converted.exists());
-		assertTrue("Converted image is empty.", converted.length() > Long.valueOf(0));
-	}
+    
+    @BeforeClass
+    public static void setUp() {
+        assertTrue(UnittestUtil.setUp());
+        UnittestUtil.createAllPdf();
+    }
+    
+    @AfterClass
+    public static void tearDown() {
+        UnittestUtil.tearDown();
+    }
+    
+    @Test
+    public void testPdfBoxConverter() {
+        final File converted = Configuration.getLastFile();
+        assertFalse("Converted image exists.", converted.exists());
+        
+        final File image = new File(UnittestUtil.getTestResource(Configuration.getLastImageName()).getFile());
+        assertTrue("Input image does not exists.", image.exists());
+        
+        final PdfBoxConverter converter = new PdfBoxConverter();
+        assertTrue(converter.convert(image));
+        
+        assertTrue("Converted image is missing.", converted.exists());
+        assertTrue("Converted image is empty.", converted.length() > Long.valueOf(0));
+    }
 }

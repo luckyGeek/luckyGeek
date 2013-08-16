@@ -40,134 +40,134 @@ import org.apache.commons.io.FileUtils;
  * Entry point of lucky geek.
  */
 public class Main {
-	private static final Logger LOG = Logger.getLogger(Main.class
-			.getCanonicalName());
+    private static final Logger LOG = Logger.getLogger(Main.class
+            .getCanonicalName());
 
-	private final FileDownloader fileDownloader = new FileDownloader();
-	private final DataProvider dataProvider = new DataProvider();
-	private final Memory memory = new Memory();
-	private final boolean merge = Configuration.isMergeAllowed();
-	private final boolean print = Configuration.isSilentPrintAllowed();
-	private final boolean fullProcedure = !Configuration.isOnlyJpegDownload();
+    private final FileDownloader fileDownloader = new FileDownloader();
+    private final DataProvider dataProvider = new DataProvider();
+    private final Memory memory = new Memory();
+    private final boolean merge = Configuration.isMergeAllowed();
+    private final boolean print = Configuration.isSilentPrintAllowed();
+    private final boolean fullProcedure = !Configuration.isOnlyImageDownload();
 
-	private volatile File lastImage = Configuration.getLastImage();
-	private volatile boolean success = false;
-	private volatile String imageUrl = "";
+    private volatile File lastImage = Configuration.getLastImage();
+    private volatile boolean success = false;
+    private volatile String imageUrl = "";
 
-	private void process() {
-		LOG.info("Begin: " + new Date());
-		extractImageUrl();
-		if (isNewImage()) {
-			LOG.info("New image detected. Begin process.");
-			storeToFile();
-			if (fullProcedure) {
-				convert();
-				appendToPDF();
-				save();
-				print();
-			}
-			cleanUp();
-			LOG.info("Finished processing new image.");
-		} else {
-			LOG.info("No new image detected. Exit program.");
-		}
-		LOG.info("End: " + new Date());
-	}
+    private void process() {
+        LOG.info("Begin: " + new Date());
+        extractImageUrl();
+        if (isNewImage()) {
+            LOG.info("New image detected. Begin process.");
+            storeToFile();
+            if (fullProcedure) {
+                convert();
+                appendToPDF();
+                save();
+                print();
+            }
+            cleanUp();
+            LOG.info("Finished processing new image.");
+        } else {
+            LOG.info("No new image detected. Exit program.");
+        }
+        LOG.info("End: " + new Date());
+    }
 
-	void extractImageUrl() {
-		LOG.fine("Begin: extract image url.");
-		imageUrl = dataProvider.extractImageUrl(Configuration.getDownloadUrl());
-		LOG.info("Url extracted: " + imageUrl);
-	}
+    void extractImageUrl() {
+        LOG.fine("Begin: extract image url.");
+        imageUrl = dataProvider.extractImageUrl(Configuration.getDownloadUrl());
+        LOG.info("Url extracted: " + imageUrl);
+    }
 
-	boolean isNewImage() {
-		return !memory.getUrl().equals(imageUrl);
-	}
+    boolean isNewImage() {
+        return !memory.getUrl().equals(imageUrl);
+    }
 
-	void storeToFile() {
-		LOG.fine("Begin download.");
-		lastImage = fileDownloader.download(imageUrl, Configuration.getLastImageName());
-		LOG.info("End downloading from url.");
-	}
+    void storeToFile() {
+        LOG.fine("Begin download.");
+        lastImage = fileDownloader.download(imageUrl, Configuration.getLastImageName());
+        LOG.info("End downloading from url.");
+    }
 
-	private void convert() {
-		LOG.fine("Begin converting.");
-		convertToPdf(Configuration.getConversionType());
-	}
+    private void convert() {
+        LOG.fine("Begin converting.");
+        convertToPdf(Configuration.getConversionType());
+    }
 
-	private void print() {
-		if (!print) {
-			LOG.info("Printing is disabled.");
-			return;
-		}
-		if (reconvertForPrintNecesarry()) {
-			LOG.fine("Begin converting for Printing.");
-			convertToPdf(ConversionTypes.PDFBOX);
-			LOG.fine("End converting for Printing.");
-			LOG.fine("Begin printing.");
-			printLastDocument();
-			LOG.info("File printed.");
-		} else {
-			LOG.info("File is already converted with PDF-Box: optimized for Letter-Printing; Skipping reconvert.");
-		}
+    private void print() {
+        if (!print) {
+            LOG.info("Printing is disabled.");
+            return;
+        }
+        if (reconvertForPrintNecesarry()) {
+            LOG.fine("Begin converting for Printing.");
+            convertToPdf(ConversionTypes.PDFBOX);
+            LOG.fine("End converting for Printing.");
+            LOG.fine("Begin printing.");
+            printLastDocument();
+            LOG.info("File printed.");
+        } else {
+            LOG.info("File is already converted with PDF-Box: optimized for Letter-Printing; Skipping reconvert.");
+        }
 
-	}
+    }
 
-	private boolean reconvertForPrintNecesarry() {
-		return !ConversionTypes.PDFBOX.equals(Configuration.getConversionType());
-	}
+    private boolean reconvertForPrintNecesarry() {
+        return !ConversionTypes.PDFBOX.equals(Configuration.getConversionType());
+    }
 
-	private void convertToPdf(ConversionTypes type) {
-		Converter converter = type.createConverter();
-		converter.convert(lastImage);
-		LOG.fine("End converting image to PDF.");
-	}
-	
-	private void printLastDocument() {
-		try {
-			new PdfPrinter().print(Configuration.getLastFile());
-		} catch (FileNotFoundException e) {
-			LOG.warning("File for printing not found! Check for previous errors.");
-		}
-	}
+    private void convertToPdf(ConversionTypes type) {
+        Converter converter = type.createConverter();
+        converter.convert(lastImage);
+        LOG.fine("End converting image to PDF.");
+    }
+    
+    private void printLastDocument() {
+        try {
+            new PdfPrinter().print(Configuration.getLastFile());
+        } catch (FileNotFoundException e) {
+            LOG.warning("File for printing not found! Check for previous errors.");
+        }
+    }
 
-	private void appendToPDF() {
-		if (!merge) {
-			LOG.info("Merging disabled.");
-			success = true;
-			return;
-		}
-		LOG.fine("Begin append to pdf.");
-		String allPdf = Configuration.getAllFileName();
-		File lastPdf = Configuration.getLastFile();
+    private void appendToPDF() {
+        if (!merge) {
+            LOG.info("Merging disabled.");
+            success = true;
+            return;
+        }
+        LOG.fine("Begin append to pdf.");
+        String allPdf = Configuration.getAllFileName();
+        File lastPdf = Configuration.getLastFile();
 
-		if (!lastPdf.exists()) {
-			LOG.warning("No pdf for merging found. Cancel merging.");
-			return;
-		}
-		success = new PdfMerger().merge(new File(allPdf), lastPdf);
-		LOG.info("Appended to pdf.");
-	}
+        if (!lastPdf.exists()) {
+            LOG.warning("No pdf for merging found. Cancel merging.");
+            return;
+        }
+        success = new PdfMerger().merge(new File(allPdf), lastPdf);
+        LOG.info("Appended to pdf.");
+    }
 
-	private void save() {
-		if (success) {
-			LOG.fine("Saving.");
-			memory.setUrl(imageUrl);
-			memory.save();
-			LOG.info("Saved.");
-		}
-	}
+    private void save() {
+        if (success) {
+            LOG.fine("Saving.");
+            memory.setUrl(imageUrl);
+            memory.save();
+            LOG.info("Saved.");
+        }
+    }
 
-	private void cleanUp() {
-		LOG.fine("Cleaning up.");
-		if (merge) {
-			FileUtils.deleteQuietly(Configuration.getLastFile());
-		}
-		LOG.info("Cleaned up.");
-	}
+    private void cleanUp() {
+        LOG.fine("Cleaning up.");
+        if (merge) {
+            FileUtils.deleteQuietly(Configuration.getLastFile());
+        }
+        LOG.info("Cleaned up.");
+    }
 
-	public static void main(String[] args) {
-		Configuration.load();
-		new Main().process();
-	}
+    public static void main(String[] args) {
+        Configuration.load();
+        new Main().process();
+    }
 }
