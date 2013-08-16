@@ -28,9 +28,12 @@
 				<include>all.pdf</include>
 				<include>logging.properties</include>
 			</includes>
+			<excludes>
+			    <exclude>scripts/startup/**</exclude>
+			</excludes>
 		</fileSet>
 		<fileSet>
-		    <directory>${project.basedir}</directory>
+		    <directory>${project.basedir}/target/extra-resources</directory>
 		    <outputDirectory></outputDirectory>
 		    <includes>
 		      <include>*.bat</include>
@@ -38,7 +41,7 @@
 		    <lineEnding>dos</lineEnding>
 		</fileSet>
 		<fileSet>
-		    <directory>${project.basedir}</directory>
+		    <directory>${project.basedir}/target/extra-resources</directory>
 		    <outputDirectory></outputDirectory>
 		    <includes>
 		      <include>*.sh</include>
@@ -46,14 +49,6 @@
 		    <lineEnding>unix</lineEnding>
 		    <fileMode>0755</fileMode>
 		</fileSet>
-    <fileSet>
-            <directory>${sourceDirectory}/../assembly/scripts</directory>
-            <outputDirectory>/scripts</outputDirectory>
-            <includes>
-                <include>*.bat</include>
-                <include>*.sh</include>
-            </includes>
-        </fileSet>
     <fileSet>
       <directory>target</directory>
       <outputDirectory>/</outputDirectory>
