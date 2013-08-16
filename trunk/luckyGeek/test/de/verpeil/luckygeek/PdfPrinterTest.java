@@ -39,27 +39,25 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.verpeil.luckygeek.PdfPrinter;
-
 /**
  * Tests <code>{@link PdfPrinter}</code>. 
  */
 public class PdfPrinterTest {
-	private PdfPrinter printer = null;
-	
-	@Before
-	public void before() {
-		printer = new PdfPrinter();
-		assertNotNull(printer);
-	}
-	
-	@Test(expected=NullPointerException.class)
-	public void testRaisesNullPointerException() throws IOException, PrinterException {
-		printer.print(null);
-	}
-	
-	@Test(expected=FileNotFoundException.class)
-	public void testRaisesFileNotFoundException() throws IOException, PrinterException {
-		printer.print(new File("non-existing"));
-	}
+    private PdfPrinter printer = null;
+    
+    @Before
+    public void before() {
+        printer = new PdfPrinter();
+        assertNotNull(printer);
+    }
+    
+    @Test(expected=NullPointerException.class)
+    public void testRaisesNullPointerException() throws IOException, PrinterException {
+        printer.print(null);
+    }
+    
+    @Test(expected=FileNotFoundException.class)
+    public void testRaisesFileNotFoundException() throws IOException, PrinterException {
+        printer.print(new File("non-existing"));
+    }
 }
