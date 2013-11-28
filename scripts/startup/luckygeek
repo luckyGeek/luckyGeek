@@ -1,0 +1,28 @@
+#!/bin/bash
+version="${project.version}"
+usage="$(basename "$0") [-h] -- everything is done in configfile
+
+where:
+    -h  show this help text
+    -v  output version"
+
+
+while getopts ':hs:' option; do
+  case "$option" in
+    h) echo "$usage"
+       exit
+       ;;
+    v) echo "$version"
+       exit
+       ;;
+    ?) printf "illegal option: '%s'\n" "$OPTARG" >&2
+       echo "$usage" >&2
+       exit 1
+       ;;
+  esac
+done
+shift $((OPTIND - 1))
+
+cd /opt/luckyGeek
+java -Djava.util.logging.config.file=logging.properties -jar ${project.artifactId}-${project.version}.jar
+
