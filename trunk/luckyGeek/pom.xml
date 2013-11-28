@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>de.verpeil</groupId>
 	<artifactId>luckygeek</artifactId>
-	<version>0.710-SNAPSHOT</version>
+	<version>0.740-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>luckygeek</name>
 	<url>http://sourceforge.net/p/luckygeek/home/Home/</url>
@@ -15,13 +15,31 @@
 			<distribution>manual</distribution>
 		</license>
 	</licenses>
+	<issueManagement>
+		<system>Sourceforge</system>
+		<url>https://sourceforge.net/p/luckygeek/tickets/</url>
+	</issueManagement>
+	<developers>
+		<developer>
+			<id>chripo2701</id>
+			<name>Chris</name>
+			<email>chripo2701@users.sf.net</email>
+			<timezone>+1</timezone>
+		</developer>
+		<developer>
+			<id>ctvoigt</id>
+			<name>Christian Voigt</name>
+			<email>ctvoigt@users.sf.net</email>
+			<timezone>+1</timezone>
+		</developer>
+	</developers>
 	<prerequisites>
 		<maven>3.0.4</maven>
 	</prerequisites>
 	<properties>
-    	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
- 	 </properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
 	<dependencies>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -42,17 +60,17 @@
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>fontbox</artifactId>
 			<scope>compile</scope>
-	    </dependency>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>
 			<scope>compile</scope>
-	    </dependency>
-	    <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	<build>
 		<defaultGoal>install</defaultGoal>
@@ -60,111 +78,111 @@
 		<finalName>${project.artifactId}-${project.version}</finalName>
 		<sourceDirectory>${project.basedir}/src</sourceDirectory>
 		<outputDirectory>${project.build.directory}/classes</outputDirectory>
-		<testSourceDirectory>${project.basedir}/test</testSourceDirectory> 
+		<testSourceDirectory>${project.basedir}/test</testSourceDirectory>
 		<testOutputDirectory>${project.build.directory}/test-classes</testOutputDirectory>
 		<testResources>
-	      <testResource>
-	        <directory>${project.basedir}/test/de/verpeil/luckygeek/testdata</directory>
-	      </testResource>
-	    </testResources>
+			<testResource>
+				<directory>${project.basedir}/test/de/verpeil/luckygeek/testdata</directory>
+			</testResource>
+		</testResources>
 		<pluginManagement>
 			<plugins>
 				<plugin>
-				    <groupId>org.apache.maven.plugins</groupId>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-antrun-plugin</artifactId>
 					<version>1.7</version>
 				</plugin>
 				<plugin>
-				    <groupId>org.apache.maven.plugins</groupId>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-assembly-plugin</artifactId>
 					<version>2.4</version>
 				</plugin>
 				<plugin>
-				    <groupId>org.apache.maven.plugins</groupId>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-dependency-plugin</artifactId>
 					<version>2.8</version>
 				</plugin>
 				<plugin>
-				    <groupId>org.apache.maven.plugins</groupId>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-release-plugin</artifactId>
 					<version>2.4.1</version>
 				</plugin>
 				<plugin>
-				    <groupId>org.apache.maven.plugins</groupId>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
 					<version>2.6</version>
 				</plugin>
 				<plugin>
-				    <groupId>org.apache.maven.plugins</groupId>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>3.1</version>
 				</plugin>
 				<plugin>
-				    <groupId>org.apache.maven.plugins</groupId>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-shade-plugin</artifactId>
 					<version>2.1</version>
 				</plugin>
 				<plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
 					<version>2.4</version>
 				</plugin>
 				<plugin>
-				    <groupId>org.apache.maven.plugins</groupId>
-	                <artifactId>maven-source-plugin</artifactId>
-	                <version>2.2.1</version>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>2.2.1</version>
 				</plugin>
 				<plugin>
-				    <groupId>org.apache.maven.plugins</groupId>
-	                <artifactId>maven-javadoc-plugin</artifactId>
-	                <version>2.9.1</version>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.9.1</version>
 				</plugin>
-			    <plugin>
-	                <groupId>org.apache.maven.plugins</groupId>
-	                <artifactId>maven-site-plugin</artifactId>
-	                <version>3.3</version>
-	            </plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>3.3</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
-		        <executions>
-		          <execution>
-		            <id>copy-resources</id>
-		            <!-- here the phase you need -->
-		            <phase>install</phase>
-		            <goals>
-		              <goal>copy-resources</goal>
-		            </goals>
-		            <configuration>
-		              <outputDirectory>${project.basedir}/target/extra-resources</outputDirectory>
-		              <resources>          
-		                <resource>
-		                  <filtering>true</filtering>
-		                  <directory>${project.basedir}/scripts/startup</directory>
-			              <includes>
-			                <include>run.*</include>
-			              </includes>
-		                </resource>
-		                <resource>
-		                  <filtering>true</filtering>
-		                  <directory>${project.basedir}/../setup</directory>
-		                  <includes>
-		                    <include>install.nsi</include>
-		                  </includes>
-		                </resource>
-		              </resources>              
-		            </configuration>            
-		          </execution>
-		        </executions>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<!-- here the phase you need -->
+						<phase>install</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.basedir}/target/extra-resources</outputDirectory>
+							<resources>
+								<resource>
+									<filtering>true</filtering>
+									<directory>${project.basedir}/scripts/startup</directory>
+									<includes>
+										<include>run.*</include>
+									</includes>
+								</resource>
+								<resource>
+									<filtering>true</filtering>
+									<directory>${project.basedir}/../setup</directory>
+									<includes>
+										<include>install.nsi</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-			    <configuration>
-			      <source>1.6</source>
-			      <target>1.6</target>
-			    </configuration>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-jar-plugin</artifactId>
@@ -176,10 +194,10 @@
 							<mainClass>de.verpeil.luckygeek.Main</mainClass>
 						</manifest>
 						<manifestEntries>
-			              <mode>development</mode>
-			              <url>${project.url}</url>
-			              <Built-By>Lucky Geeks</Built-By>
-			            </manifestEntries>
+							<mode>development</mode>
+							<url>${project.url}</url>
+							<Built-By>Lucky Geeks</Built-By>
+						</manifestEntries>
 					</archive>
 				</configuration>
 			</plugin>
@@ -202,12 +220,12 @@
 				<configuration>
 					<show>package</show>
 					<nohelp>true</nohelp>
-				    <groups>
-				        <group>
-				            <title>LuckyGeek</title>
-				            <packages>de.verpeil*</packages>
-				        </group>
-				    </groups>
+					<groups>
+						<group>
+							<title>LuckyGeek</title>
+							<packages>de.verpeil*</packages>
+						</group>
+					</groups>
 				</configuration>
 				<executions>
 					<execution>
@@ -222,8 +240,8 @@
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
 					<descriptors>
-				      <descriptor>${project.basedir}/zip.xml</descriptor>
-				    </descriptors>
+						<descriptor>${project.basedir}/zip.xml</descriptor>
+					</descriptors>
 				</configuration>
 				<executions>
 					<execution>
@@ -235,120 +253,123 @@
 					</execution>
 				</executions>
 			</plugin>
-			 <plugin>
-		        <artifactId>maven-antrun-plugin</artifactId>
-		        <executions>
-		          <execution>
-		            <phase>install</phase>
-		            <configuration>
-		              <target name="buildInstallerOnly" description="Builds exe with NSIS">
-				        <unzip src="${project.basedir}/target/${project.artifactId}-${project.version}-bin.zip" dest="${project.basedir}/target/installer"/>
-		                <copy todir="${project.basedir}/target/installer/${project.artifactId}-${project.version}">
-				            <fileset dir="${project.basedir}/../setup">
-				                <include name="*"/>
-				                <exclude name="*.nsi"/>
-				            </fileset>
-				            <fileset dir="${project.basedir}/target/extra-resources">
-				                <include name="*.nsi" />
-				            </fileset>
-				        </copy>
-						<exec executable="makensis" osfamily="windows" dir="${project.basedir}/target/installer/${project.artifactId}-${project.version}" >
-				            <arg value="install.nsi"/>
-				        </exec>
-				        <copy todir="${project.basedir}/target/">
-				            <fileset dir="${project.basedir}/target/installer/${project.artifactId}-${project.version}">
-				                <include name="*.exe"/>
-				            </fileset>
-				        </copy>
-				        <delete dir="${project.basedir}/target/installer/"/>
-		              </target>
-		            </configuration>
-		            <goals>
-		              <goal>run</goal>
-		            </goals>
-		          </execution>
-		        </executions>
-		      </plugin>
-		      <plugin>
-                <artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                  <!--
-                    During release:perform, enable the "release" profile
-                   -->
-                  <releaseProfiles>release</releaseProfiles>
-                  <goals>deploy assembly:single</goals>
-                </configuration>
-             </plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<configuration>
+							<target name="buildInstallerOnly" description="Builds exe with NSIS">
+								<unzip
+									src="${project.basedir}/target/${project.artifactId}-${project.version}-bin.zip"
+									dest="${project.basedir}/target/installer" />
+								<copy
+									todir="${project.basedir}/target/installer/${project.artifactId}-${project.version}">
+									<fileset dir="${project.basedir}/../setup">
+										<include name="*" />
+										<exclude name="*.nsi" />
+									</fileset>
+									<fileset dir="${project.basedir}/target/extra-resources">
+										<include name="*.nsi" />
+									</fileset>
+								</copy>
+								<exec executable="makensis" osfamily="windows"
+									dir="${project.basedir}/target/installer/${project.artifactId}-${project.version}">
+									<arg value="install.nsi" />
+								</exec>
+								<copy todir="${project.basedir}/target/">
+									<fileset
+										dir="${project.basedir}/target/installer/${project.artifactId}-${project.version}">
+										<include name="*.exe" />
+									</fileset>
+								</copy>
+								<delete dir="${project.basedir}/target/installer/" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-release-plugin</artifactId>
+				<configuration>
+					<!-- During release:perform, enable the "release" profile -->
+					<releaseProfiles>release</releaseProfiles>
+					<goals>deploy assembly:single</goals>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<reporting>
-	  <plugins>
-		<plugin>
-	        <groupId>org.apache.maven.plugins</groupId>
-	        <artifactId>maven-jxr-plugin</artifactId>
-	        <version>2.3</version>
-	    </plugin>
-		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-site-plugin</artifactId>
-			<version>3.3</version>
-		</plugin>
-		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-project-info-reports-plugin</artifactId>
-			<version>2.7</version>
-		</plugin>
-		<plugin>
-			<groupId>org.codehaus.mojo</groupId>
-			<artifactId>cobertura-maven-plugin</artifactId>
-			<version>2.5.2</version>
-		</plugin>
-		<plugin>
-           <groupId>org.apache.maven.plugins</groupId>
-           <artifactId>maven-surefire-report-plugin</artifactId>
-           <version>2.16</version>
-        </plugin>
-		<plugin>
-			<groupId>org.codehaus.mojo</groupId>
-			<artifactId>findbugs-maven-plugin</artifactId>
-			<version>2.5.2</version>
-			<configuration>
-                <effort>Max</effort>
-                <threshold>Low</threshold>
-            </configuration>
-		</plugin>
-		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-pmd-plugin</artifactId>
-			<version>3.0.1</version>
-		</plugin>
-		<plugin>
-			<groupId>org.codehaus.mojo</groupId>
-			<artifactId>clirr-maven-plugin</artifactId>
-			<version>2.5</version>
-		</plugin>
-		<plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>jdepend-maven-plugin</artifactId>
-        </plugin>
-		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-checkstyle-plugin</artifactId>
-			<version>2.10</version>
-			<configuration>
-			    <includeTestSourceDirectory>true</includeTestSourceDirectory>
-			</configuration>
-		</plugin>
-		<plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>taglist-maven-plugin</artifactId>
-            <version>2.4</version>
-        </plugin>
-        <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-       </plugin>
-	  </plugins>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<version>2.3</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.3</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.7</version>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.5.2</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>2.16</version>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>findbugs-maven-plugin</artifactId>
+				<version>2.5.2</version>
+				<configuration>
+					<effort>Max</effort>
+					<threshold>Low</threshold>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>3.0.1</version>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>clirr-maven-plugin</artifactId>
+				<version>2.5</version>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jdepend-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<version>2.10</version>
+				<configuration>
+					<includeTestSourceDirectory>true</includeTestSourceDirectory>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>taglist-maven-plugin</artifactId>
+				<version>2.4</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+		</plugins>
 	</reporting>
 	<dependencyManagement>
 		<dependencies>
@@ -382,10 +403,10 @@
 				<artifactId>pdfbox</artifactId>
 				<version>1.8.2</version>
 				<exclusions>
-				    <exclusion>
-				        <groupId>org.apache.pdfbox</groupId>
-				        <artifactId>jempbox</artifactId>
-				    </exclusion>
+					<exclusion>
+						<groupId>org.apache.pdfbox</groupId>
+						<artifactId>jempbox</artifactId>
+					</exclusion>
 				</exclusions>
 			</dependency>
 		</dependencies>
