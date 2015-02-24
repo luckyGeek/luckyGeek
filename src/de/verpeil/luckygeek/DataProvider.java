@@ -54,8 +54,8 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 
-/**
- *Downloads feed and extracts url. 
+/** 
+ * Downloads feed and extracts url. 
  */
 class DataProvider {
     private static final Logger LOG = Logger.getLogger(DataProvider.class.getCanonicalName());

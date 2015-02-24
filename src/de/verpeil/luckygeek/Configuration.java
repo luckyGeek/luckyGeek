@@ -42,7 +42,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 /**
- *<b>Singleton</b> for read-access of configuration.
+ * <b>Singleton</b> for read-access of configuration.
  */
 final class Configuration {
     private static final String LOCAL_CONFIG_FOLDER = "luckyGeek";
@@ -53,31 +53,32 @@ final class Configuration {
     private static final Properties PROPERTIES = new Properties();
 
     private static boolean isLocalFolder = false;
-    
+
     private Configuration() {
         // not required
     }
-    
+
     static void load() {
         try {
             load(getConfigFile());
         } catch (Exception e) {
-           LOG.severe("Error while loading default configuration." + e.getMessage());
-           e.printStackTrace();
+            LOG.severe("Error while loading default configuration."
+                    + e.getMessage());
+            e.printStackTrace();
         }
     }
 
-    static void load(String file) {
+    static void load(String filePath) {
         PROPERTIES.clear();
 
-        File f = new File(file);
-        if (!f.exists()) {
-            LOG.warning("Can not load configuration from file " + file);
+        File file = new File(filePath);
+        if (!file.exists()) {
+            LOG.warning("Can not load configuration from file " + filePath);
             return;
         }
         InputStream ins = null;
         try {
-            ins = new FileInputStream(file);
+            ins = new FileInputStream(filePath);
             PROPERTIES.load(ins);
         } catch (Exception e) {
             LOG.severe("Error while reading configuration file: "

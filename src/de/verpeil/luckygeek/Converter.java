@@ -27,12 +27,13 @@
  *Software Foundation, Inc., 59 Temple Place, Suite 330, Boston,
  *MA 02111-1307, USA.
  */
+
 package de.verpeil.luckygeek;
 
 import java.io.File;
 
 /**
- *<b>Interface</b> for image conversion.
+ * <b>Interface</b> for image conversion.
  */
 interface Converter {
     boolean convert(File imageFile);
